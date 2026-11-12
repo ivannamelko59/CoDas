@@ -44,7 +44,7 @@ export default function CoDaSPortal() {
   const [kpiProgress, setKpiProgress] = useState(84);
   const [toast, setToast] = useState<string | null>(null);
 
-  // Applications State (End-to-End Flow)
+  // Applications State
   const [applications, setApplications] = useState<Application[]>([
     {
       id: 'APP-2026-01',
@@ -79,7 +79,7 @@ export default function CoDaSPortal() {
   const [appPortfolio, setAppPortfolio] = useState('');
   const [appMotivation, setAppMotivation] = useState('');
 
-  // Admin Filters for Applications
+  // Admin Filters
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [filterTrack, setFilterTrack] = useState<string>('all');
   const [appSearch, setAppSearch] = useState('');
@@ -123,7 +123,6 @@ export default function CoDaSPortal() {
     },
   ]);
 
-  // Load persisted data from localStorage
   useEffect(() => {
     const savedUser = localStorage.getItem('codas_current_user');
     const savedUsersList = localStorage.getItem('codas_users_list');
@@ -141,7 +140,6 @@ export default function CoDaSPortal() {
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Auth Handlers
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
@@ -211,7 +209,6 @@ export default function CoDaSPortal() {
     }
   };
 
-  // Application Submission (Applicant)
   const handleApplicationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser || !appUniversity.trim() || !appGpa.trim() || !appMotivation.trim()) return;
@@ -239,7 +236,6 @@ export default function CoDaSPortal() {
     showToast('Вашу кандидатуру успішно передано на розгляд комісії!');
   };
 
-  // Admin Decision Handler
   const handleApplicationStatus = (id: string, status: 'approved' | 'rejected') => {
     const updated = applications.map((app) => (app.id === id ? { ...app, status } : app));
     setApplications(updated);
@@ -247,7 +243,6 @@ export default function CoDaSPortal() {
     showToast(status === 'approved' ? 'Кандидата схвалено на програму!' : 'Заявку відхилено.');
   };
 
-  // WP & Publications Handlers
   const handleUpdateWpProgress = (index: number, delta: number) => {
     setWorkPackages((prev) =>
       prev.map((wp, i) => {
@@ -278,7 +273,6 @@ export default function CoDaSPortal() {
     showToast('Публікацію додано до бази DOI');
   };
 
-  // Filtered Lists
   const filteredApplications = applications.filter((app) => {
     const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
     const matchesTrack = filterTrack === 'all' || app.track.includes(filterTrack);
@@ -299,40 +293,41 @@ export default function CoDaSPortal() {
   const approvedCount = applications.filter((a) => a.status === 'approved').length;
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
-      {/* Ambient Background Glows */}
+    <div className="min-h-screen bg-gradient-to-br from-[#F7F3FC] via-[#EFE7FA] to-[#F9F2FA] text-[#2D1B4E] font-sans selection:bg-[#9D65D0] selection:text-white relative overflow-x-hidden">
+      {/* Pastel Lavender & Orchid Ambient Blobs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-indigo-600/20 blur-[130px]" />
-        <div className="absolute top-1/3 -right-40 w-[460px] h-[460px] rounded-full bg-cyan-500/15 blur-[130px]" />
+        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-[#C084FC]/25 blur-[110px]" />
+        <div className="absolute top-1/3 -right-32 w-[440px] h-[440px] rounded-full bg-[#E879F9]/20 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[360px] rounded-full bg-[#A78BFA]/20 blur-[110px]" />
       </div>
 
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900/95 border border-cyan-400/40 text-sm text-white shadow-2xl backdrop-blur-xl">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#2D1B4E] border border-[#D8B4FE]/40 text-sm text-white shadow-xl backdrop-blur-xl">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#E879F9] animate-ping" />
           <span>{toast}</span>
         </div>
       )}
 
       {/* AUTH MODAL (LOGIN / REGISTER) */}
       {isAuthModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-          <div className="w-full max-w-md rounded-3xl bg-[#0D1425] border border-white/15 p-6 sm:p-8 shadow-2xl space-y-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B4E]/45 backdrop-blur-md p-4">
+          <div className="w-full max-w-md rounded-3xl bg-white/95 border border-[#E2D4F5] p-6 sm:p-8 shadow-2xl space-y-6 relative">
             <button
               onClick={() => setIsAuthModalOpen(false)}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center text-sm"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#F3E8FF] hover:bg-[#E9D5FF] text-[#6B21A8] flex items-center justify-center text-sm font-bold"
             >
               ✕
             </button>
 
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#9333EA]">
                 CoDaS Identity &amp; Access
               </span>
-              <h2 className="text-2xl font-black text-white mt-1">
+              <h2 className="text-2xl font-black text-[#2D1B4E] mt-1">
                 {authMode === 'login' ? 'Вхід до системи' : 'Реєстрація учасника'}
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#6B5B85] mt-1">
                 {authMode === 'login'
                   ? 'Увійдіть як кандидат для подачі заявки або як адміністратор консорціуму.'
                   : 'Створіть обліковий запис кандидата для участі в програмі CoDaS EMJM.'}
@@ -340,7 +335,7 @@ export default function CoDaSPortal() {
             </div>
 
             {/* Mode Switcher */}
-            <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold">
+            <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[#F5EEFD] border border-[#E5D5F7] text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => {
@@ -348,7 +343,9 @@ export default function CoDaSPortal() {
                   setAuthError('');
                 }}
                 className={`py-2 rounded-lg transition ${
-                  authMode === 'login' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                  authMode === 'login'
+                    ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white shadow-sm'
+                    : 'text-[#6B5B85] hover:text-[#2D1B4E]'
                 }`}
               >
                 Вхід (Login)
@@ -360,7 +357,9 @@ export default function CoDaSPortal() {
                   setAuthError('');
                 }}
                 className={`py-2 rounded-lg transition ${
-                  authMode === 'register' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                  authMode === 'register'
+                    ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white shadow-sm'
+                    : 'text-[#6B5B85] hover:text-[#2D1B4E]'
                 }`}
               >
                 Реєстрація (Sign Up)
@@ -370,71 +369,71 @@ export default function CoDaSPortal() {
             <form onSubmit={handleAuthSubmit} className="space-y-4">
               {authMode === 'register' && (
                 <div>
-                  <label className="block text-xs text-slate-300 mb-1">Прізвище та ім&apos;я</label>
+                  <label className="block text-xs font-semibold text-[#4C3575] mb-1">Прізвище та ім&apos;я</label>
                   <input
                     type="text"
                     required
                     placeholder="Наприклад: Іван Мельник"
                     value={authName}
                     onChange={(e) => setAuthName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-xs text-slate-300 mb-1">Електронна пошта (Email)</label>
+                <label className="block text-xs font-semibold text-[#4C3575] mb-1">Електронна пошта (Email)</label>
                 <input
                   type="email"
                   required
                   placeholder="name@university.edu"
                   value={authEmail}
                   onChange={(e) => setAuthEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-300 mb-1">Пароль</label>
+                <label className="block text-xs font-semibold text-[#4C3575] mb-1">Пароль</label>
                 <input
                   type="password"
                   required
                   placeholder="••••••••"
                   value={authPassword}
                   onChange={(e) => setAuthPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                 />
               </div>
 
               {authError && (
-                <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300">
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700">
                   {authError}
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-sm font-bold hover:opacity-95 transition shadow-lg shadow-indigo-600/30"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] text-white text-sm font-bold hover:opacity-95 transition shadow-lg shadow-purple-300"
               >
                 {authMode === 'login' ? 'Увійти в кабінет' : 'Зареєструватися та увійти'}
               </button>
             </form>
 
-            {/* Quick Demo Fillers for Presentation */}
-            <div className="pt-4 border-t border-white/10 space-y-2">
-              <div className="text-[11px] text-slate-400 text-center">Швидке заповнення для перевірки ролей:</div>
+            {/* Quick Demo Fillers */}
+            <div className="pt-4 border-t border-[#EFE5FA] space-y-2">
+              <div className="text-[11px] text-[#6B5B85] text-center">Швидке заповнення для перевірки ролей:</div>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('applicant')}
-                  className="py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-[11px] font-semibold text-amber-300 transition"
+                  className="py-2 px-3 rounded-xl bg-[#F3E8FF] hover:bg-[#E9D5FF] border border-[#D8B4FE] text-[11px] font-bold text-[#6B21A8] transition"
                 >
                   Демо-Учасник
                 </button>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('admin')}
-                  className="py-2 px-3 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-[11px] font-semibold text-cyan-300 transition"
+                  className="py-2 px-3 rounded-xl bg-[#FAE8FF] hover:bg-[#F5D0FE] border border-[#F0ABFC] text-[11px] font-bold text-[#86198F] transition"
                 >
                   Демо-Адмін
                 </button>
@@ -445,27 +444,25 @@ export default function CoDaSPortal() {
       )}
 
       {/* Top Glass Navbar */}
-      <header className="sticky top-0 z-40 bg-[#070B14]/85 backdrop-blur-xl border-b border-white/10">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-[#E5D5F7]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <div onClick={() => setActiveTab('overview')} className="flex items-center gap-3 cursor-pointer group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-600 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/25">
-              <div className="w-full h-full rounded-[11px] bg-[#0B1120] flex items-center justify-center font-black text-base text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-300">
-                CD
-              </div>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#C084FC] to-[#E879F9] flex items-center justify-center font-black text-base text-white shadow-md shadow-purple-200 group-hover:scale-105 transition">
+              CD
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg tracking-tight text-white">CoDaS</span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/15 text-indigo-300 border border-indigo-400/25">
+                <span className="font-extrabold text-lg tracking-tight text-[#2D1B4E]">CoDaS</span>
+                <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#F3E8FF] text-[#7E22CE] border border-[#E9D5FF]">
                   Erasmus+ EMJM
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">Academic Consortium Portal</p>
+              <p className="text-[11px] text-[#6B5B85] hidden sm:block">Academic Consortium Portal</p>
             </div>
           </div>
 
           {/* Center Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/10">
+          <nav className="hidden lg:flex items-center gap-1 bg-[#F5EEFD] p-1 rounded-2xl border border-[#E6D6F8]">
             {[
               { id: 'overview', label: 'Паспорт' },
               { id: 'consortium', label: 'Консорціум' },
@@ -479,8 +476,8 @@ export default function CoDaSPortal() {
                 onClick={() => setActiveTab(tab.id as TabId)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white shadow-sm'
+                    : 'text-[#5B467A] hover:text-[#2D1B4E] hover:bg-white/70'
                 }`}
               >
                 {tab.label}
@@ -492,7 +489,7 @@ export default function CoDaSPortal() {
           <div className="flex items-center gap-2.5">
             {!currentUser ? (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:inline-block text-xs text-slate-400 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">
+                <span className="hidden sm:inline-block text-xs font-medium text-[#6B5B85] px-2.5 py-1 rounded-lg bg-[#F5EEFD] border border-[#E6D6F8]">
                   Режим: Гість
                 </span>
                 <button
@@ -500,18 +497,18 @@ export default function CoDaSPortal() {
                     setAuthMode('login');
                     setIsAuthModalOpen(true);
                   }}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-xs font-bold hover:opacity-95 transition shadow-lg shadow-indigo-600/25"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#C084FC] text-white text-xs font-bold hover:opacity-95 transition shadow-md shadow-purple-200"
                 >
                   Увійти / Реєстрація
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2.5 bg-white/[0.05] pl-3 pr-1.5 py-1 rounded-2xl border border-white/15">
+              <div className="flex items-center gap-2.5 bg-[#F5EEFD] pl-3 pr-1.5 py-1 rounded-2xl border border-[#DFCCF5]">
                 <div className="text-right">
-                  <div className="text-xs font-bold text-white leading-tight">{currentUser.name}</div>
+                  <div className="text-xs font-bold text-[#2D1B4E] leading-tight">{currentUser.name}</div>
                   <div
-                    className={`text-[10px] font-bold uppercase ${
-                      currentUser.role === 'admin' ? 'text-cyan-400' : 'text-amber-400'
+                    className={`text-[10px] font-extrabold uppercase ${
+                      currentUser.role === 'admin' ? 'text-[#9333EA]' : 'text-[#C026D3]'
                     }`}
                   >
                     {currentUser.role === 'admin' ? 'Адміністратор' : 'Учасник / Кандидат'}
@@ -519,7 +516,7 @@ export default function CoDaSPortal() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-rose-500/20 hover:text-rose-300 text-xs font-semibold text-slate-300 transition"
+                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-50 hover:text-rose-600 text-xs font-semibold text-[#5B467A] border border-[#E6D6F8] transition"
                 >
                   Вийти
                 </button>
@@ -542,7 +539,9 @@ export default function CoDaSPortal() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabId)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap ${
-                activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-white/5 text-slate-400 border border-white/10'
+                activeTab === tab.id
+                  ? 'bg-[#8B5CF6] text-white'
+                  : 'bg-white text-[#5B467A] border border-[#E6D6F8]'
               }`}
             >
               {tab.label}
@@ -553,23 +552,23 @@ export default function CoDaSPortal() {
 
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-10">
-        {/* Hero Banner */}
-        <section className="relative rounded-3xl bg-gradient-to-br from-white/[0.07] via-white/[0.03] to-transparent border border-white/10 p-6 sm:p-10 overflow-hidden shadow-2xl">
+        {/* Pastel Lavender Hero Banner */}
+        <section className="relative rounded-3xl bg-gradient-to-br from-white/95 via-[#F6EEFF]/90 to-[#FBE8FF]/90 border border-[#E2D0F8] p-6 sm:p-10 overflow-hidden shadow-xl shadow-purple-200/40">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-cyan-300 text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F3E8FF] border border-[#D8B4FE] text-[#7E22CE] text-xs font-semibold">
+                <span className="w-2 h-2 rounded-full bg-[#A855F7] animate-ping" />
                 <span>Co-funded by the European Union • Grant № 101082451</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.12] text-white">
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.12] text-[#2D1B4E]">
                 Communications Engineering &amp;{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-300 to-emerald-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF]">
                   Data Science
                 </span>
               </h1>
 
-              <p className="text-slate-300/90 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="text-[#5B467A] text-sm sm:text-base leading-relaxed max-w-2xl">
                 Міжнародний академічний портал спільного магістерського та дослідницького консорціуму: мережі 5G/6G,
                 Edge AI, подвійні дипломи та конкурсний відбір кандидатів.
               </p>
@@ -577,13 +576,13 @@ export default function CoDaSPortal() {
               <div className="pt-2 flex flex-wrap gap-3">
                 <button
                   onClick={() => setActiveTab('applications')}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-xs sm:text-sm font-bold hover:opacity-95 transition shadow-lg shadow-indigo-600/25"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] text-white text-xs sm:text-sm font-bold hover:opacity-95 transition shadow-lg shadow-purple-300/60"
                 >
                   {role === 'admin' ? 'Перейти до модерації заявок →' : 'Подати кандидатуру на програму →'}
                 </button>
                 <button
                   onClick={() => setActiveTab('consortium')}
-                  className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs sm:text-sm font-semibold transition"
+                  className="px-5 py-2.5 rounded-xl bg-white hover:bg-[#F5EEFD] border border-[#DFCCF5] text-[#4C3575] text-xs sm:text-sm font-semibold transition"
                 >
                   Університети-партнери
                 </button>
@@ -591,23 +590,23 @@ export default function CoDaSPortal() {
             </div>
 
             {/* Role Status Box */}
-            <div className="shrink-0 rounded-2xl bg-[#0B1120]/90 border border-white/10 p-5 min-w-[270px] space-y-3">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="shrink-0 rounded-2xl bg-white/90 border border-[#E2D0F8] p-5 min-w-[270px] space-y-3 shadow-sm">
+              <div className="flex items-center justify-between text-xs text-[#6B5B85]">
                 <span>Статус сесії</span>
-                <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" /> Активна
+                <span className="inline-flex items-center gap-1.5 text-[#7E22CE] font-bold">
+                  <span className="w-2 h-2 rounded-full bg-[#A855F7]" /> Активна
                 </span>
               </div>
-              <div className="h-[1px] bg-white/10" />
+              <div className="h-[1px] bg-[#EFE5FA]" />
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-slate-400">Поточна роль користувача</div>
-                <div className="mt-1 text-sm font-bold text-white">
+                <div className="text-[11px] uppercase tracking-wider text-[#6B5B85]">Поточна роль користувача</div>
+                <div className="mt-1 text-sm font-extrabold text-[#2D1B4E]">
                   {role === 'public' && 'Гість (Ознайомчий доступ)'}
-                  {role === 'applicant' && <span className="text-amber-400">Учасник / Кандидат</span>}
-                  {role === 'admin' && <span className="text-cyan-300">Адміністратор комісії</span>}
+                  {role === 'applicant' && <span className="text-[#C026D3]">Учасник / Кандидат</span>}
+                  {role === 'admin' && <span className="text-[#7C3AED]">Адміністратор комісії</span>}
                 </div>
               </div>
-              <div className="text-[11px] text-slate-400 leading-relaxed">
+              <div className="text-[11px] text-[#6B5B85] leading-relaxed">
                 {role === 'public' && 'Авторизуйтесь або зареєструйтесь, щоб подати анкету кандидата.'}
                 {role === 'applicant' && 'Ви можете подати свою кандидатуру та відстежувати її статус.'}
                 {role === 'admin' && 'Вам доступні фільтрація анкет, ухвалення рішень та керування KPI.'}
@@ -616,17 +615,17 @@ export default function CoDaSPortal() {
           </div>
         </section>
 
-        {/* TAB: APPLICATIONS (END-TO-END CANDIDATE & ADMIN WORKFLOW) */}
+        {/* TAB: APPLICATIONS */}
         {activeTab === 'applications' && (
           <div className="space-y-8">
-            {/* 1. GUEST VIEW: Prompt to Login/Register */}
+            {/* 1. GUEST VIEW */}
             {role === 'public' && (
-              <div className="rounded-3xl bg-gradient-to-br from-indigo-950/70 via-[#0D1425] to-cyan-950/40 border border-indigo-400/30 p-8 sm:p-10 text-center max-w-2xl mx-auto space-y-5 shadow-2xl">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 border border-indigo-400/30 text-cyan-300 flex items-center justify-center mx-auto text-2xl font-black">
+              <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-8 sm:p-10 text-center max-w-2xl mx-auto space-y-5 shadow-xl shadow-purple-200/40">
+                <div className="w-14 h-14 rounded-2xl bg-[#F3E8FF] border border-[#D8B4FE] text-[#7E22CE] flex items-center justify-center mx-auto text-2xl">
                   🔒
                 </div>
-                <h2 className="text-2xl font-black text-white">Подача кандидатури доступна авторизованим учасникам</h2>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <h2 className="text-2xl font-black text-[#2D1B4E]">Подача кандидатури доступна авторизованим учасникам</h2>
+                <p className="text-sm text-[#5B467A] leading-relaxed">
                   Щоб подати заявку на участь у магістерській та дослідницькій програмі <strong>CoDaS EMJM</strong> або
                   перевірити статус розгляду своєї анкети, увійдіть в обліковий запис або пройдіть швидку реєстрацію.
                 </p>
@@ -636,7 +635,7 @@ export default function CoDaSPortal() {
                       setAuthMode('register');
                       setIsAuthModalOpen(true);
                     }}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-sm font-bold hover:opacity-95 transition shadow-lg shadow-indigo-600/30"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white text-sm font-bold hover:opacity-95 transition shadow-lg shadow-purple-300/60"
                   >
                     Зареєструватися як Учасник
                   </button>
@@ -645,7 +644,7 @@ export default function CoDaSPortal() {
                       setAuthMode('login');
                       setIsAuthModalOpen(true);
                     }}
-                    className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white text-sm font-semibold transition"
+                    className="px-6 py-3 rounded-xl bg-[#F5EEFD] hover:bg-[#E9D5FF] border border-[#DFCCF5] text-[#4C3575] text-sm font-semibold transition"
                   >
                     Увійти в кабінет
                   </button>
@@ -653,77 +652,76 @@ export default function CoDaSPortal() {
               </div>
             )}
 
-            {/* 2. APPLICANT VIEW: Submit Application + Track My Applications */}
+            {/* 2. APPLICANT VIEW */}
             {role === 'applicant' && currentUser && (
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Application Form */}
                 <form
                   onSubmit={handleApplicationSubmit}
-                  className="lg:col-span-3 rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-5"
+                  className="lg:col-span-3 rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-5 shadow-lg shadow-purple-200/30"
                 >
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#C026D3]">
                       Кабінет кандидата
                     </span>
-                    <h2 className="text-2xl font-bold text-white mt-1">Подача кандидатури на програму CoDaS</h2>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <h2 className="text-2xl font-bold text-[#2D1B4E] mt-1">Подача кандидатури на програму CoDaS</h2>
+                    <p className="text-xs text-[#6B5B85] mt-1">
                       Заповніть академічний профіль. Після відправки заявка надійде на розгляд відбірковій комісії.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Кандидат</label>
+                      <label className="block text-xs font-semibold text-[#6B5B85] mb-1">Кандидат</label>
                       <input
                         type="text"
                         disabled
                         value={currentUser.name}
-                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#F5EEFD] border border-[#E6D6F8] text-sm text-[#4C3575]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Контактний Email</label>
+                      <label className="block text-xs font-semibold text-[#6B5B85] mb-1">Контактний Email</label>
                       <input
                         type="text"
                         disabled
                         value={currentUser.email}
-                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#F5EEFD] border border-[#E6D6F8] text-sm text-[#4C3575]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="sm:col-span-2">
-                      <label className="block text-xs text-slate-300 mb-1">Поточний університет та спеціальність *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Поточний університет та спеціальність *</label>
                       <input
                         type="text"
                         required
                         placeholder="Напр.: ТНТУ / КПІ, Комп'ютерні науки"
                         value={appUniversity}
                         onChange={(e) => setAppUniversity(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-300 mb-1">Середній бал (GPA) *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Середній бал (GPA) *</label>
                       <input
                         type="text"
                         required
                         placeholder="Напр.: 4.85"
                         value={appGpa}
                         onChange={(e) => setAppGpa(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-slate-300 mb-1">Бажаний трек мобільності *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Бажаний трек мобільності *</label>
                       <select
                         value={appTrack}
                         onChange={(e) => setAppTrack(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                       >
                         <option value="Aalto University (FI) → Grenoble INP (FR)">
                           Aalto University (FI) → Grenoble INP (FR)
@@ -737,47 +735,47 @@ export default function CoDaSPortal() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-300 mb-1">Посилання на CV / GitHub / ORCID</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Посилання на CV / GitHub / ORCID</label>
                       <input
                         type="url"
                         placeholder="https://github.com/username"
                         value={appPortfolio}
                         onChange={(e) => setAppPortfolio(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs text-slate-300 mb-1">Мотиваційний лист та наукові інтереси *</label>
+                    <label className="block text-xs font-semibold text-[#4C3575] mb-1">Мотиваційний лист та наукові інтереси *</label>
                     <textarea
                       rows={3}
                       required
                       placeholder="Опишіть ваш досвід у Data Science / мережах та тему майбутнього дослідження..."
                       value={appMotivation}
                       onChange={(e) => setAppMotivation(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-sm font-extrabold hover:opacity-95 transition shadow-lg shadow-amber-500/20"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-white text-sm font-extrabold hover:opacity-95 transition shadow-md shadow-purple-300"
                   >
                     Надіслати кандидатуру на розгляд
                   </button>
                 </form>
 
                 {/* My Submitted Applications Status */}
-                <div className="lg:col-span-2 rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-7 space-y-4">
-                  <h3 className="text-lg font-bold text-white">Мої подані заявки</h3>
-                  <p className="text-xs text-slate-400">
+                <div className="lg:col-span-2 rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-7 space-y-4 shadow-lg shadow-purple-200/30">
+                  <h3 className="text-lg font-bold text-[#2D1B4E]">Мої подані заявки</h3>
+                  <p className="text-xs text-[#6B5B85]">
                     Статус оновлюється автоматично після перевірки адміністратором консорціуму.
                   </p>
 
                   <div className="space-y-3 pt-2">
                     {applications.filter((a) => a.email === currentUser.email).length === 0 ? (
-                      <div className="p-5 rounded-2xl bg-[#0B1120] border border-white/10 text-xs text-slate-400 text-center">
+                      <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8] text-xs text-[#6B5B85] text-center">
                         Ви ще не подали жодної заявки. Заповніть форму ліворуч!
                       </div>
                     ) : (
@@ -786,31 +784,31 @@ export default function CoDaSPortal() {
                         .map((myApp) => (
                           <div
                             key={myApp.id}
-                            className="p-4 rounded-2xl bg-[#0B1120] border border-white/15 space-y-2.5"
+                            className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#DFCCF5] space-y-2.5"
                           >
                             <div className="flex items-center justify-between">
-                              <span className="font-mono text-xs text-slate-400">{myApp.id}</span>
+                              <span className="font-mono text-xs text-[#6B5B85]">{myApp.id}</span>
                               {myApp.status === 'pending' && (
-                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
                                   ⏳ На розгляді
                                 </span>
                               )}
                               {myApp.status === 'approved' && (
-                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                                   ✓ Схвалено
                                 </span>
                               )}
                               {myApp.status === 'rejected' && (
-                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-400/30">
+                                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
                                   ✕ Відхилено
                                 </span>
                               )}
                             </div>
-                            <div className="text-sm font-bold text-white">{myApp.track}</div>
-                            <div className="text-xs text-slate-400">
-                              Університет: {myApp.university} • GPA: <strong className="text-white">{myApp.gpa}</strong>
+                            <div className="text-sm font-bold text-[#2D1B4E]">{myApp.track}</div>
+                            <div className="text-xs text-[#5B467A]">
+                              Університет: {myApp.university} • GPA: <strong className="text-[#2D1B4E]">{myApp.gpa}</strong>
                             </div>
-                            <div className="text-[11px] text-slate-500">Дата подачі: {myApp.submittedAt}</div>
+                            <div className="text-[11px] text-[#6B5B85]">Дата подачі: {myApp.submittedAt}</div>
                           </div>
                         ))
                     )}
@@ -819,45 +817,44 @@ export default function CoDaSPortal() {
               </div>
             )}
 
-            {/* 3. ADMIN VIEW: Filter, Search & Approve/Reject Applications */}
+            {/* 3. ADMIN VIEW */}
             {role === 'admin' && (
-              <div className="rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-6">
+              <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-6 shadow-xl shadow-purple-200/30">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">
                       Панель відбіркової комісії (Admin)
                     </span>
-                    <h2 className="text-2xl font-bold text-white mt-1">Фільтрація та модерація заявок кандидатів</h2>
+                    <h2 className="text-2xl font-bold text-[#2D1B4E] mt-1">Фільтрація та модерація заявок кандидатів</h2>
                   </div>
 
-                  {/* Quick Counters */}
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-slate-300">
+                  <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                    <span className="px-3 py-1.5 rounded-xl bg-[#F5EEFD] border border-[#DFCCF5] text-[#4C3575]">
                       Усього: <strong>{applications.length}</strong>
                     </span>
-                    <span className="px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/30 text-amber-300">
+                    <span className="px-3 py-1.5 rounded-xl bg-amber-100 border border-amber-300 text-amber-800">
                       Очікують: <strong>{applications.filter((a) => a.status === 'pending').length}</strong>
                     </span>
-                    <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">
+                    <span className="px-3 py-1.5 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-800">
                       Схвалено: <strong>{approvedCount}</strong>
                     </span>
                   </div>
                 </div>
 
                 {/* Filter Bar */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-[#0B1120]/90 border border-white/10">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-[#F7F2FC] border border-[#E5D5F7]">
                   <input
                     type="text"
                     placeholder="Пошук за ПІБ, ВНЗ або ID..."
                     value={appSearch}
                     onChange={(e) => setAppSearch(e.target.value)}
-                    className="px-3.5 py-2 rounded-xl bg-[#070B14] border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                   />
 
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
-                    className="px-3.5 py-2 rounded-xl bg-[#070B14] border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                   >
                     <option value="all">Усі статуси розгляду</option>
                     <option value="pending">⏳ На розгляді (Pending)</option>
@@ -868,7 +865,7 @@ export default function CoDaSPortal() {
                   <select
                     value={filterTrack}
                     onChange={(e) => setFilterTrack(e.target.value)}
-                    className="px-3.5 py-2 rounded-xl bg-[#070B14] border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
                   >
                     <option value="all">Усі університетські треки</option>
                     <option value="Aalto">Трек: Aalto University</option>
@@ -880,66 +877,65 @@ export default function CoDaSPortal() {
                 {/* Filtered Applications List */}
                 <div className="space-y-4">
                   {filteredApplications.length === 0 ? (
-                    <div className="p-8 text-center text-sm text-slate-400 rounded-2xl bg-[#0B1120] border border-white/10">
+                    <div className="p-8 text-center text-sm text-[#6B5B85] rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
                       За обраними фільтрами кандидатів не знайдено.
                     </div>
                   ) : (
                     filteredApplications.map((app) => (
                       <div
                         key={app.id}
-                        className="p-5 sm:p-6 rounded-2xl bg-[#0B1120]/90 border border-white/10 hover:border-white/20 transition flex flex-col lg:flex-row lg:items-center justify-between gap-5"
+                        className="p-5 sm:p-6 rounded-2xl bg-[#FAF7FE] border border-[#E5D5F7] hover:border-[#C084FC] transition flex flex-col lg:flex-row lg:items-center justify-between gap-5"
                       >
                         <div className="space-y-2 max-w-2xl">
                           <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 text-slate-300">
+                            <span className="font-mono text-xs px-2 py-0.5 rounded bg-[#EDE9FE] text-[#5B21B6] font-semibold">
                               {app.id}
                             </span>
-                            <h3 className="text-base font-bold text-white">{app.fullName}</h3>
-                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold">
+                            <h3 className="text-base font-bold text-[#2D1B4E]">{app.fullName}</h3>
+                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#7E22CE] font-bold">
                               GPA: {app.gpa}
                             </span>
                             {app.status === 'pending' && (
-                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold">
+                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold">
                                 На розгляді
                               </span>
                             )}
                             {app.status === 'approved' && (
-                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">
+                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
                                 Схвалено
                               </span>
                             )}
                             {app.status === 'rejected' && (
-                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-semibold">
+                              <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-semibold">
                                 Відхилено
                               </span>
                             )}
                           </div>
 
-                          <div className="text-xs text-slate-300">
+                          <div className="text-xs text-[#4C3575]">
                             <strong>ВНЗ:</strong> {app.university} • <strong>Трек:</strong> {app.track}
                           </div>
-                          <p className="text-xs text-slate-400 leading-relaxed">{app.motivation}</p>
-                          <div className="flex items-center gap-4 text-[11px] text-slate-500">
+                          <p className="text-xs text-[#6B5B85] leading-relaxed">{app.motivation}</p>
+                          <div className="flex items-center gap-4 text-[11px] text-[#6B5B85]">
                             <span>Email: {app.email}</span>
                             <a
                               href={app.portfolioUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-cyan-400 hover:underline"
+                              className="text-[#9333EA] font-semibold hover:underline"
                             >
                               CV / GitHub ↗
                             </a>
                           </div>
                         </div>
 
-                        {/* Admin Moderation Actions */}
                         <div className="flex sm:flex-row lg:flex-col gap-2 shrink-0">
                           <button
                             onClick={() => handleApplicationStatus(app.id, 'approved')}
                             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
                               app.status === 'approved'
-                                ? 'bg-emerald-500 text-slate-950'
-                                : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30'
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800 border border-emerald-300'
                             }`}
                           >
                             ✓ Схвалити
@@ -948,8 +944,8 @@ export default function CoDaSPortal() {
                             onClick={() => handleApplicationStatus(app.id, 'rejected')}
                             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
                               app.status === 'rejected'
-                                ? 'bg-rose-500 text-white'
-                                : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-400/30'
+                                ? 'bg-rose-600 text-white'
+                                : 'bg-rose-100 hover:bg-rose-200 text-rose-800 border border-rose-300'
                             }`}
                           >
                             ✕ Відхилити
@@ -969,26 +965,26 @@ export default function CoDaSPortal() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: 'Акронім програми', value: 'CoDaS EMJM', sub: 'Erasmus Mundus Joint Master', accent: 'from-indigo-500 to-blue-500' },
-                { label: 'Період реалізації', value: '2023 – 2027', sub: '48 місяців • Етап 3 активний', accent: 'from-cyan-400 to-teal-500' },
-                { label: 'Бюджет гранту ЄС', value: '€ 4,860,000', sub: '100% фінансування Єврокомісії', accent: 'from-emerald-400 to-green-500' },
-                { label: 'Зараховані кандидати', value: `${116 + approvedCount} / 120`, sub: `Індекс KPI програми: ${kpiProgress}%`, accent: 'from-amber-400 to-orange-500' },
+                { label: 'Акронім програми', value: 'CoDaS EMJM', sub: 'Erasmus Mundus Joint Master', accent: 'from-[#8B5CF6] to-[#A855F7]' },
+                { label: 'Період реалізації', value: '2023 – 2027', sub: '48 місяців • Етап 3 активний', accent: 'from-[#C084FC] to-[#E879F9]' },
+                { label: 'Бюджет гранту ЄС', value: '€ 4,860,000', sub: '100% фінансування Єврокомісії', accent: 'from-[#A78BFA] to-[#F472B6]' },
+                { label: 'Зараховані кандидати', value: `${116 + approvedCount} / 120`, sub: `Індекс KPI програми: ${kpiProgress}%`, accent: 'from-[#7C3AED] to-[#D946EF]' },
               ].map((stat, i) => (
-                <div key={i} className="rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 p-5 transition">
-                  <div className={`w-10 h-1 rounded-full bg-gradient-to-r ${stat.accent} mb-4`} />
-                  <div className="text-xs font-medium text-slate-400">{stat.label}</div>
-                  <div className="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</div>
-                  <div className="mt-1.5 text-xs text-slate-400">{stat.sub}</div>
+                <div key={i} className="rounded-2xl bg-white/90 hover:bg-white border border-[#E2D0F8] p-5 transition shadow-sm">
+                  <div className={`w-10 h-1.5 rounded-full bg-gradient-to-r ${stat.accent} mb-4`} />
+                  <div className="text-xs font-semibold text-[#6B5B85]">{stat.label}</div>
+                  <div className="mt-1.5 text-2xl sm:text-3xl font-extrabold text-[#2D1B4E]">{stat.value}</div>
+                  <div className="mt-1.5 text-xs text-[#6B5B85]">{stat.sub}</div>
                 </div>
               ))}
             </div>
 
-            <div className="rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Паспорт та місія проєкту</span>
-              <h2 className="text-2xl font-bold text-white">
+            <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-4 shadow-sm">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">Паспорт та місія проєкту</span>
+              <h2 className="text-2xl font-bold text-[#2D1B4E]">
                 Інтеграція телекомунікаційних систем нового покоління та Data Science
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-[#5B467A] text-sm sm:text-base leading-relaxed">
                 Консорціум <strong>CoDaS</strong> формує спільний європейський освітній та науковий простір.
                 Студенти та дослідники працюють над архітектурою мереж 6G, штучним інтелектом на межі мережі
                 (Edge AI), кібербезпекою критичної інфраструктури та аналізом великих даних у реальному часі.
@@ -1001,21 +997,21 @@ export default function CoDaSPortal() {
         {activeTab === 'consortium' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
-              { name: 'Aalto University', country: 'Фінляндія • Координатор', code: 'FI', dept: 'Department of Information and Communications Engineering', focus: '5G/6G Wireless Systems, Autonomous Networks, Signal Processing', color: 'from-blue-500 to-cyan-400' },
-              { name: 'Grenoble INP – UGA', country: 'Франція • Партнер', code: 'FR', dept: 'École nationale supérieure d’informatique et de mathématiques appliquées', focus: 'Data Science, Distributed Systems, Edge AI & Cybersecurity', color: 'from-indigo-500 to-purple-500' },
-              { name: 'Technische Universität Braunschweig', country: 'Німеччина • Партнер', code: 'DE', dept: 'Institute for Communications Technology (IfN)', focus: 'Vehicular Communications, Optical Networks, IoT Telemetry', color: 'from-amber-400 to-red-500' },
-              { name: 'Universitat Politècnica de Catalunya (UPC)', country: 'Іспанія • Асоційований партнер', code: 'ES', dept: 'Barcelona School of Telecommunications Engineering', focus: 'Smart Cities, Cloud-Native Core Networks, Big Data Analytics', color: 'from-emerald-400 to-teal-500' },
+              { name: 'Aalto University', country: 'Фінляндія • Координатор', code: 'FI', dept: 'Department of Information and Communications Engineering', focus: '5G/6G Wireless Systems, Autonomous Networks, Signal Processing', color: 'from-[#8B5CF6] to-[#C084FC]' },
+              { name: 'Grenoble INP – UGA', country: 'Франція • Партнер', code: 'FR', dept: 'École nationale supérieure d’informatique et de mathématiques appliquées', focus: 'Data Science, Distributed Systems, Edge AI & Cybersecurity', color: 'from-[#A855F7] to-[#E879F9]' },
+              { name: 'Technische Universität Braunschweig', country: 'Німеччина • Партнер', code: 'DE', dept: 'Institute for Communications Technology (IfN)', focus: 'Vehicular Communications, Optical Networks, IoT Telemetry', color: 'from-[#7C3AED] to-[#A78BFA]' },
+              { name: 'Universitat Politècnica de Catalunya (UPC)', country: 'Іспанія • Асоційований партнер', code: 'ES', dept: 'Barcelona School of Telecommunications Engineering', focus: 'Smart Cities, Cloud-Native Core Networks, Big Data Analytics', color: 'from-[#C026D3] to-[#F472B6]' },
             ].map((uni, i) => (
-              <div key={i} className="rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-7 space-y-3">
+              <div key={i} className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-7 space-y-3 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/10 text-cyan-300">{uni.country}</span>
-                  <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${uni.color} text-slate-950 font-black text-xs flex items-center justify-center`}>
+                  <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#F3E8FF] text-[#7E22CE]">{uni.country}</span>
+                  <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${uni.color} text-white font-black text-xs flex items-center justify-center shadow-sm`}>
                     {uni.code}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">{uni.name}</h3>
-                <p className="text-xs text-slate-400">{uni.dept}</p>
-                <p className="text-sm text-slate-300 pt-2 border-t border-white/10">{uni.focus}</p>
+                <h3 className="text-xl font-bold text-[#2D1B4E]">{uni.name}</h3>
+                <p className="text-xs text-[#6B5B85]">{uni.dept}</p>
+                <p className="text-sm text-[#4C3575] pt-2 border-t border-[#EFE5FA]">{uni.focus}</p>
               </div>
             ))}
           </div>
@@ -1023,30 +1019,30 @@ export default function CoDaSPortal() {
 
         {/* TAB: WORK PACKAGES */}
         {activeTab === 'wp' && (
-          <div className="rounded-3xl bg-white/[0.04] border border-white/10 overflow-hidden">
-            <div className="p-6 border-b border-white/10 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">Робочі пакети консорціуму (WP1–WP5)</h2>
-              {role === 'admin' && <span className="text-xs text-cyan-300">Керування прогресом активне</span>}
+          <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] overflow-hidden shadow-sm">
+            <div className="p-6 border-b border-[#EFE5FA] flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#2D1B4E]">Робочі пакети консорціуму (WP1–WP5)</h2>
+              {role === 'admin' && <span className="text-xs font-bold text-[#9333EA]">Керування прогресом активне</span>}
             </div>
-            <div className="divide-y divide-white/10">
+            <div className="divide-y divide-[#EFE5FA]">
               {workPackages.map((wp, i) => (
                 <div key={wp.code} className="p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300">{wp.code}</span>
-                      <span className="font-bold text-white">{wp.title}</span>
+                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F3E8FF] text-[#7E22CE]">{wp.code}</span>
+                      <span className="font-bold text-[#2D1B4E]">{wp.title}</span>
                     </div>
-                    <div className="text-xs text-slate-400 mt-1">Лідер: {wp.lead}</div>
+                    <div className="text-xs text-[#6B5B85] mt-1">Лідер: {wp.lead}</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-32 bg-white/10 rounded-full h-2.5 overflow-hidden">
-                      <div className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full" style={{ width: `${wp.progress}%` }} />
+                    <div className="w-32 bg-[#EFE5FA] rounded-full h-2.5 overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] h-full" style={{ width: `${wp.progress}%` }} />
                     </div>
-                    <span className="text-xs font-bold text-white w-10">{wp.progress}%</span>
+                    <span className="text-xs font-bold text-[#2D1B4E] w-10">{wp.progress}%</span>
                     {role === 'admin' && (
                       <div className="flex gap-1">
-                        <button onClick={() => handleUpdateWpProgress(i, -5)} className="w-7 h-7 rounded-lg bg-white/10 text-xs font-bold">-</button>
-                        <button onClick={() => handleUpdateWpProgress(i, 5)} className="w-7 h-7 rounded-lg bg-indigo-600 text-xs font-bold">+</button>
+                        <button onClick={() => handleUpdateWpProgress(i, -5)} className="w-7 h-7 rounded-lg bg-[#F3E8FF] text-[#6B21A8] text-xs font-bold">-</button>
+                        <button onClick={() => handleUpdateWpProgress(i, 5)} className="w-7 h-7 rounded-lg bg-[#8B5CF6] text-white text-xs font-bold">+</button>
                       </div>
                     )}
                   </div>
@@ -1064,41 +1060,41 @@ export default function CoDaSPortal() {
               placeholder="Пошук публікацій за назвою або DOI..."
               value={pubSearch}
               onChange={(e) => setPubSearch(e.target.value)}
-              className="w-full sm:max-w-md px-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/15 text-sm text-white"
+              className="w-full sm:max-w-md px-4 py-2.5 rounded-2xl bg-white/90 border border-[#DFCCF5] text-sm text-[#2D1B4E] focus:outline-none focus:border-[#9333EA]"
             />
             {(role === 'applicant' || role === 'admin') && (
-              <form onSubmit={handleAddPublication} className="rounded-3xl bg-white/[0.04] border border-cyan-400/30 p-6 space-y-3">
-                <div className="text-sm font-bold text-cyan-300">+ Додати наукову публікацію / препринт</div>
+              <form onSubmit={handleAddPublication} className="rounded-3xl bg-white/90 border border-[#D8B4FE] p-6 space-y-3 shadow-sm">
+                <div className="text-sm font-bold text-[#7E22CE]">+ Додати наукову публікацію / препринт</div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <input
                     type="text"
                     placeholder="Назва статті..."
                     value={newPubTitle}
                     onChange={(e) => setNewPubTitle(e.target.value)}
-                    className="sm:col-span-2 px-4 py-2 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white"
+                    className="sm:col-span-2 px-4 py-2 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                   />
                   <input
                     type="text"
                     placeholder="DOI (напр. 10.1109/6G.2026)"
                     value={newPubDoi}
                     onChange={(e) => setNewPubDoi(e.target.value)}
-                    className="px-4 py-2 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white"
+                    className="px-4 py-2 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                   />
                 </div>
-                <button type="submit" className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">
+                <button type="submit" className="px-4 py-2 rounded-xl bg-[#8B5CF6] text-white text-xs font-bold">
                   Опублікувати
                 </button>
               </form>
             )}
             <div className="space-y-4">
               {filteredPublications.map((pub, i) => (
-                <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 flex flex-col sm:flex-row justify-between gap-4">
+                <div key={i} className="rounded-2xl bg-white/90 border border-[#E2D0F8] p-5 flex flex-col sm:flex-row justify-between gap-4 shadow-sm">
                   <div>
-                    <span className="text-[10px] font-bold uppercase text-indigo-300">{pub.tag} • {pub.year}</span>
-                    <h3 className="font-bold text-white mt-1">{pub.title}</h3>
-                    <p className="text-xs text-slate-400 mt-1">{pub.authors} — {pub.venue}</p>
+                    <span className="text-[10px] font-bold uppercase text-[#9333EA]">{pub.tag} • {pub.year}</span>
+                    <h3 className="font-bold text-[#2D1B4E] mt-1">{pub.title}</h3>
+                    <p className="text-xs text-[#6B5B85] mt-1">{pub.authors} — {pub.venue}</p>
                   </div>
-                  <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer" className="self-start text-xs font-mono px-3 py-1.5 rounded-xl bg-white/10 text-cyan-300">
+                  <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer" className="self-start text-xs font-mono px-3 py-1.5 rounded-xl bg-[#F3E8FF] text-[#7E22CE] font-semibold">
                     DOI: {pub.doi} ↗
                   </a>
                 </div>
@@ -1109,36 +1105,36 @@ export default function CoDaSPortal() {
 
         {/* TAB: KPI REPORTS */}
         {activeTab === 'reports' && (
-          <div className="rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-6">
+          <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-6 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">Аналітика та KPI проєкту</h2>
+              <h2 className="text-xl font-bold text-[#2D1B4E]">Аналітика та KPI проєкту</h2>
               {role === 'admin' && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-cyan-300">KPI:</span>
+                  <span className="text-xs font-bold text-[#7E22CE]">KPI:</span>
                   <input
                     type="number"
                     min={0}
                     max={100}
                     value={kpiProgress}
                     onChange={(e) => setKpiProgress(Number(e.target.value))}
-                    className="w-16 px-2 py-1 rounded-lg bg-[#070B14] border border-cyan-400/40 text-xs text-white text-center"
+                    className="w-16 px-2 py-1 rounded-lg bg-[#FAF7FE] border border-[#D8B4FE] text-xs text-[#2D1B4E] text-center font-bold"
                   />
-                  <span className="text-xs text-cyan-300">%</span>
+                  <span className="text-xs font-bold text-[#7E22CE]">%</span>
                 </div>
               )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-5 rounded-2xl bg-[#0B1120] border border-white/10">
-                <div className="text-xs text-slate-400">Зараховані студенти</div>
-                <div className="text-3xl font-black text-white mt-2">{116 + approvedCount} / 120</div>
+              <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
+                <div className="text-xs text-[#6B5B85]">Зараховані студенти</div>
+                <div className="text-3xl font-black text-[#2D1B4E] mt-2">{116 + approvedCount} / 120</div>
               </div>
-              <div className="p-5 rounded-2xl bg-[#0B1120] border border-white/10">
-                <div className="text-xs text-slate-400">Опубліковані статті</div>
-                <div className="text-3xl font-black text-white mt-2">{publications.length + 21}</div>
+              <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
+                <div className="text-xs text-[#6B5B85]">Опубліковані статті</div>
+                <div className="text-3xl font-black text-[#2D1B4E] mt-2">{publications.length + 21}</div>
               </div>
-              <div className="p-5 rounded-2xl bg-[#0B1120] border border-white/10">
-                <div className="text-xs text-slate-400">Освоєння бюджету</div>
-                <div className="text-3xl font-black text-white mt-2">€ 3.42M</div>
+              <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
+                <div className="text-xs text-[#6B5B85]">Освоєння бюджету</div>
+                <div className="text-3xl font-black text-[#2D1B4E] mt-2">€ 3.42M</div>
               </div>
             </div>
           </div>
@@ -1146,10 +1142,10 @@ export default function CoDaSPortal() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 bg-[#050810] mt-16 py-8 px-4 sm:px-6 text-xs text-slate-400">
+      <footer className="relative z-10 border-t border-[#E5D5F7] bg-white/80 mt-16 py-8 px-4 sm:px-6 text-xs text-[#6B5B85]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>© 2026 CoDaS Consortium (Communications Engineering &amp; Data Science). All rights reserved.</div>
-          <div className="text-slate-500">Co-funded by the Erasmus+ Programme of the European Union</div>
+          <div className="text-[#8E7AA8]">Co-funded by the Erasmus+ Programme of the European Union</div>
         </div>
       </footer>
     </div>
