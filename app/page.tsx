@@ -3,19 +3,32 @@
 import React, { useState, useEffect } from 'react';
 
 type Role = 'public' | 'executor' | 'admin';
+type TabId = 'overview' | 'consortium' | 'wp' | 'publications' | 'reports';
 
 export default function CoDaSPortal() {
   const [role, setRole] = useState<Role>('public');
-  const [activeTab, setActiveTab] = useState<'overview' | 'consortium' | 'wp' | 'publications' | 'reports'>('overview');
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [kpiProgress, setKpiProgress] = useState(84);
+  const [searchQuery, setSearchQuery] = useState('');
   const [newPubTitle, setNewPubTitle] = useState('');
   const [newPubDoi, setNewPubDoi] = useState('');
+  const [toast, setToast] = useState<string | null>(null);
+
+  const [workPackages, setWorkPackages] = useState([
+    { code: 'WP1', title: 'Управління консорціумом та забезпечення якості', lead: 'Aalto University', progress: 95, status: 'Активний' },
+    { code: 'WP2', title: 'Гармонізація навчальних планів та акредитація', lead: 'TU Braunschweig', progress: 100, status: 'Завершено' },
+    { code: 'WP3', title: 'Академічна мобільність та літні школи CoDaS', lead: 'Grenoble INP', progress: 80, status: 'Активний' },
+    { code: 'WP4', title: 'Спільні наукові дослідження (Open Science)', lead: 'UPC Barcelona', progress: 72, status: 'У роботі' },
+    { code: 'WP5', title: 'Поширення результатів та індустріальні кейси', lead: 'All Partners', progress: 88, status: 'Активний' },
+  ]);
+
   const [publications, setPublications] = useState([
     {
       title: 'Joint Communications and Data Science Curriculum Framework for European Master Programmes',
       authors: 'Aalto University, TU Braunschweig, Grenoble INP Consortium',
       venue: 'IEEE Global Engineering Education Conference (EDUCON)',
       year: '2025',
+      tag: 'Curriculum',
       doi: '10.1109/EDUCON.2025.1048291',
     },
     {
@@ -23,6 +36,7 @@ export default function CoDaSPortal() {
       authors: 'J. Korhonen, M. Weber, L. Moreau, O. Kovalenko',
       venue: 'IEEE Communications Magazine',
       year: '2026',
+      tag: '6G & Edge AI',
       doi: '10.1109/MCOM.2026.9841204',
     },
     {
@@ -30,6 +44,7 @@ export default function CoDaSPortal() {
       authors: 'CoDaS Quality Assurance Board',
       venue: 'European Journal of Engineering Education',
       year: '2026',
+      tag: 'Mobility',
       doi: '10.1080/03043797.2026.219405',
     },
   ]);
@@ -39,9 +54,31 @@ export default function CoDaSPortal() {
     if (savedRole) setRole(savedRole);
   }, []);
 
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleRoleChange = (newRole: Role) => {
     setRole(newRole);
     localStorage.setItem('codas_role', newRole);
+    const names = { public: 'Публічний гість', executor: 'Виконавець (WP Lead)', admin: 'Адміністратор' };
+    showToast(`Активовано режим: ${names[newRole]}`);
+  };
+
+  const handleUpdateWpProgress = (index: number, delta: number) => {
+    setWorkPackages((prev) =>
+      prev.map((wp, i) => {
+        if (i !== index) return wp;
+        const nextVal = Math.min(100, Math.max(0, wp.progress + delta));
+        return {
+          ...wp,
+          progress: nextVal,
+          status: nextVal === 100 ? 'Завершено' : 'Активний',
+        };
+      })
+    );
+    showToast('Прогрес робочого пакета оновлено');
   };
 
   const handleAddPublication = (e: React.FormEvent) => {
@@ -53,47 +90,80 @@ export default function CoDaSPortal() {
         authors: 'CoDaS Research Group (Added via Portal)',
         venue: 'CoDaS Open Repository / Preprint',
         year: '2026',
+        tag: 'New Release',
         doi: newPubDoi,
       },
       ...publications,
     ]);
     setNewPubTitle('');
     setNewPubDoi('');
+    showToast('Публікацію додано до бази DOI');
   };
 
+  const filteredPublications = publications.filter(
+    (p) =>
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.authors.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.doi.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-blue-700 text-white font-bold flex items-center justify-center shadow-sm">
-              CD
+    <div className="min-h-screen bg-[#070B14] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+      {/* Ambient Background Glows */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-indigo-600/20 blur-[130px]" />
+        <div className="absolute top-1/3 -right-40 w-[460px] h-[460px] rounded-full bg-cyan-500/15 blur-[130px]" />
+        <div className="absolute bottom-0 left-1/3 w-[500px] h-[350px] rounded-full bg-blue-600/10 blur-[120px]" />
+      </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900/95 border border-indigo-500/40 text-sm text-white shadow-2xl shadow-indigo-950/50 backdrop-blur-xl animate-bounce">
+          <span className="w-2 h-2 rounded-full bg-cyan-400" />
+          <span>{toast}</span>
+        </div>
+      )}
+
+      {/* Top Glass Navbar */}
+      <header className="sticky top-0 z-40 bg-[#070B14]/80 backdrop-blur-xl border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 py-3 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <div
+            onClick={() => setActiveTab('overview')}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-600 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/25">
+              <div className="w-full h-full rounded-[11px] bg-[#0B1120] flex items-center justify-center font-black text-base tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-300 group-hover:scale-105 transition">
+                CD
+              </div>
             </div>
             <div>
-              <span className="font-bold text-lg tracking-tight text-slate-900">CoDaS</span>
-              <span className="hidden sm:inline-block ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                Erasmus+ EMJM
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-lg tracking-tight text-white">CoDaS</span>
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/15 text-indigo-300 border border-indigo-400/25">
+                  EU Horizon / EMJM
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 hidden sm:block">Academic Consortium Portal</p>
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
+          {/* Center Navigation */}
+          <nav className="hidden lg:flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/10">
             {[
-              { id: 'overview', label: 'Паспорт проєкту' },
+              { id: 'overview', label: 'Паспорт' },
               { id: 'consortium', label: 'Консорціум' },
               { id: 'wp', label: 'Робочі пакети' },
-              { id: 'publications', label: 'Публікації (DOI)' },
-              { id: 'reports', label: 'Звіти та KPI' },
+              { id: 'publications', label: 'Публікації' },
+              { id: 'reports', label: 'Аналітика та KPI' },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`px-3 py-2 rounded-lg transition ${
+                onClick={() => setActiveTab(tab.id as TabId)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-blue-50 text-blue-700 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 {tab.label}
@@ -101,213 +171,363 @@ export default function CoDaSPortal() {
             ))}
           </nav>
 
-          {/* Role Switcher (RBAC) */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+          {/* Role Switcher Pill */}
+          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-xl border border-white/10 text-xs">
             <button
               onClick={() => handleRoleChange('public')}
-              className={`px-2.5 py-1 rounded-md font-medium transition ${
-                role === 'public' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
+              className={`px-2.5 py-1.5 rounded-lg font-medium transition ${
+                role === 'public'
+                  ? 'bg-white/15 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Гість
             </button>
             <button
               onClick={() => handleRoleChange('executor')}
-              className={`px-2.5 py-1 rounded-md font-medium transition ${
-                role === 'executor' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
+              className={`px-2.5 py-1.5 rounded-lg font-medium transition ${
+                role === 'executor'
+                  ? 'bg-amber-500/90 text-slate-950 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Виконавець
             </button>
             <button
               onClick={() => handleRoleChange('admin')}
-              className={`px-2.5 py-1 rounded-md font-medium transition ${
-                role === 'admin' ? 'bg-blue-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
+              className={`px-2.5 py-1.5 rounded-lg font-medium transition ${
+                role === 'admin'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Адмін
             </button>
           </div>
         </div>
-      </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-14 px-4 sm:px-6 border-b border-slate-800">
-        <div className="max-w-6xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-medium mb-4">
-            <span>Co-funded by the European Union</span>
-            <span>•</span>
-            <span>Grant Agreement № 101082451</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight max-w-3xl leading-tight">
-            Communications Engineering &amp; Data Science (CoDaS)
-          </h1>
-          <p className="mt-4 text-slate-300 max-w-2xl text-base sm:text-lg leading-relaxed">
-            Міжнародний академічний портал спільного магістерського та дослідницького консорціуму у сфері
-            інтелектуальних телекомунікаційних мереж, 5G/6G систем та науки про дані.
-          </p>
-
-          {/* Role Status Banner */}
-          <div className="mt-8 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>
-              Поточний режим доступу:{' '}
-              <strong className="text-white uppercase">
-                {role === 'public' ? 'Публічний перегляд' : role === 'executor' ? 'Виконавець (WP Lead)' : 'Адміністратор консорціуму'}
-              </strong>
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10">
-        {/* Mobile Tabs */}
-        <div className="flex md:hidden overflow-x-auto gap-2 pb-2">
+        {/* Mobile Sub-nav */}
+        <div className="flex lg:hidden overflow-x-auto gap-1.5 px-4 pb-3 no-scrollbar">
           {[
             { id: 'overview', label: 'Паспорт' },
             { id: 'consortium', label: 'Консорціум' },
             { id: 'wp', label: 'Робочі пакети' },
             { id: 'publications', label: 'Публікації' },
-            { id: 'reports', label: 'Звіти/KPI' },
+            { id: 'reports', label: 'Аналітика' },
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap ${
-                activeTab === tab.id ? 'bg-blue-700 text-white' : 'bg-white border border-slate-200 text-slate-700'
+              onClick={() => setActiveTab(tab.id as TabId)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+                activeTab === tab.id
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white/5 text-slate-400 border border-white/10'
               }`}
             >
               {tab.label}
             </button>
           ))}
         </div>
+      </header>
 
-        {/* 1. PROJECT PASSPORT */}
+      {/* Main Container */}
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+        {/* Modern Hero Banner */}
+        <section className="relative rounded-3xl bg-gradient-to-br from-white/[0.07] via-white/[0.03] to-transparent border border-white/10 p-6 sm:p-10 overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-cyan-500/20 via-indigo-500/10 to-transparent rounded-full blur-2xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="max-w-3xl space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-cyan-300 text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                <span>Co-funded by the European Union • Grant № 101082451</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.12] text-white">
+                Communications Engineering &amp;{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-300 to-emerald-300">
+                  Data Science
+                </span>
+              </h1>
+
+              <p className="text-slate-300/90 text-sm sm:text-base leading-relaxed max-w-2xl">
+                Європейський міжуніверситетський R&amp;D портал: інтелектуальні мережі 5G/6G, хмарні обчислення,
+                академічна мобільність подвійних дипломів та відкриті наукові репозиторії.
+              </p>
+            </div>
+
+            {/* Live Access Badge Card */}
+            <div className="shrink-0 rounded-2xl bg-[#0B1120]/90 border border-white/10 p-5 min-w-[260px] space-y-3 backdrop-blur-md">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Статус системи</span>
+                <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" /> Online
+                </span>
+              </div>
+              <div className="h-[1px] bg-white/10" />
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-400">Активна роль (RBAC)</div>
+                <div className="mt-1 text-sm font-bold text-white flex items-center gap-2">
+                  {role === 'public' && 'Публічний перегляд'}
+                  {role === 'executor' && <span className="text-amber-400">Виконавець проєкту</span>}
+                  {role === 'admin' && <span className="text-cyan-300">Адміністратор консорціуму</span>}
+                </div>
+              </div>
+              <div className="text-[11px] text-slate-400">
+                {role === 'public'
+                  ? 'Перемкніть роль зверху, щоб редагувати WP та публікації.'
+                  : 'Режим редагування активний — зміни застосовуються миттєво.'}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TAB 1: OVERVIEW (BENTO GRID) */}
         {activeTab === 'overview' && (
-          <div className="space-y-8">
+          <div className="space-y-6">
+            {/* 4 Metric Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: 'Акронім / Код', value: 'CoDaS / EMJM-2023', sub: 'Erasmus Mundus Joint Master' },
-                { label: 'Період реалізації', value: '2023 – 2027', sub: '48 місяців (Етап 3 активний)' },
-                { label: 'Бюджет гранту ЄС', value: '€ 4,860,000', sub: '100% співфінансування EU' },
-                { label: 'Виконання KPI', value: `${kpiProgress}%`, sub: 'Поточний індекс результативності' },
+                {
+                  label: 'Акронім програми',
+                  value: 'CoDaS EMJM',
+                  sub: 'Erasmus Mundus Joint Master',
+                  accent: 'from-indigo-500 to-blue-500',
+                },
+                {
+                  label: 'Період реалізації',
+                  value: '2023 – 2027',
+                  sub: '48 місяців • Етап 3 активний',
+                  accent: 'from-cyan-400 to-teal-500',
+                },
+                {
+                  label: 'Бюджет гранту ЄС',
+                  value: '€ 4,860,000',
+                  sub: '100% фінансування Єврокомісії',
+                  accent: 'from-emerald-400 to-green-500',
+                },
+                {
+                  label: 'Загальний індекс KPI',
+                  value: `${kpiProgress}%`,
+                  sub: 'Середній прогрес по 5 пакетах',
+                  accent: 'from-amber-400 to-orange-500',
+                },
               ].map((stat, i) => (
-                <div key={i} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                  <div className="text-xs font-medium text-slate-500 uppercase tracking-wider">{stat.label}</div>
-                  <div className="mt-2 text-2xl font-bold text-slate-900">{stat.value}</div>
-                  <div className="mt-1 text-xs text-slate-500">{stat.sub}</div>
+                <div
+                  key={i}
+                  className="group relative rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 p-5 transition-all duration-300"
+                >
+                  <div className={`w-10 h-1 rounded-full bg-gradient-to-r ${stat.accent} mb-4`} />
+                  <div className="text-xs font-medium text-slate-400">{stat.label}</div>
+                  <div className="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {stat.value}
+                  </div>
+                  <div className="mt-1.5 text-xs text-slate-400">{stat.sub}</div>
                 </div>
               ))}
             </div>
 
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-slate-900">Паспорт та стратегічні цілі проєкту</h2>
-              <p className="text-slate-600 leading-relaxed">
-                Проєкт <strong>CoDaS (Communications Engineering and Data Science)</strong> об&apos;єднує провідні технічні
-                університети Європи для підготовки фахівців нового покоління на перетині інженерії зв&apos;язку, хмарних
-                обчислень, кібербезпеки та машинного навчання.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="font-semibold text-slate-900">Подвійні дипломи</div>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Мобільність студентів між двома європейськими університетами-партнерами протягом 2 років (120 ECTS).
+            {/* Bento Info Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="lg:col-span-2 rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                  Паспорт та місія проєкту
+                </span>
+                <h2 className="text-2xl font-bold text-white">
+                  Інтеграція телекомунікаційних систем нового покоління та Data Science
+                </h2>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  Консорціум <strong>CoDaS</strong> формує спільний європейський освітній та науковий простір.
+                  Студенти та дослідники працюють над архітектурою мереж 6G, штучним інтелектом на межі мережі
+                  (Edge AI), кібербезпекою критичної інфраструктури та аналізом великих даних у реальному часі.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
+                  <div className="p-4 rounded-2xl bg-[#0B1120]/80 border border-white/10">
+                    <div className="text-cyan-300 font-bold text-sm">120 ECTS</div>
+                    <div className="text-xs text-slate-400 mt-1">Подвійні дипломи магістра двох університетів ЄС</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#0B1120]/80 border border-white/10">
+                    <div className="text-indigo-300 font-bold text-sm">4 Університети</div>
+                    <div className="text-xs text-slate-400 mt-1">Фінляндія, Франція, Німеччина та Іспанія</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#0B1120]/80 border border-white/10">
+                    <div className="text-emerald-300 font-bold text-sm">Open Science</div>
+                    <div className="text-xs text-slate-400 mt-1">Усі публікації та датасети мають відкритий DOI</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Navigation Card */}
+              <div className="rounded-3xl bg-gradient-to-b from-indigo-950/60 to-white/[0.03] border border-indigo-500/25 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">
+                    Швидкий доступ
+                  </span>
+                  <h3 className="text-xl font-bold text-white">Інтерактивні модулі порталу</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Переходьте між розділами для перегляду університетів-партнерів, прогресу робочих пакетів або
+                    додавання нових наукових статей.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="font-semibold text-slate-900">Індустріальні кейси</div>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Спільні R&amp;D лабораторії з Nokia, Ericsson, Siemens та регіональними телеком-операторами.
-                  </p>
-                </div>
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="font-semibold text-slate-900">Відкрита наука</div>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Усі навчальні модулі, набори даних (datasets) та наукові статті індексуються з відкритим DOI.
-                  </p>
+                <div className="space-y-2.5">
+                  <button
+                    onClick={() => setActiveTab('wp')}
+                    className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-left text-xs font-semibold text-white flex items-center justify-between transition"
+                  >
+                    <span>Переглянути Робочі пакети (WP1–WP5)</span>
+                    <span>→</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('publications')}
+                    className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-left text-xs font-semibold text-white flex items-center justify-between transition shadow-lg shadow-indigo-600/25"
+                  >
+                    <span>Репозиторій публікацій (DOI)</span>
+                    <span>→</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* 2. CONSORTIUM */}
+        {/* TAB 2: CONSORTIUM */}
         {activeTab === 'consortium' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
               {
                 name: 'Aalto University',
-                country: 'Фінляндія (Координатор)',
+                country: 'Фінляндія • Координатор',
+                code: 'FI',
                 dept: 'Department of Information and Communications Engineering',
                 focus: '5G/6G Wireless Systems, Autonomous Networks, Signal Processing',
+                color: 'from-blue-500 to-cyan-400',
               },
               {
                 name: 'Grenoble INP – UGA',
-                country: 'Франція (Партнер)',
+                country: 'Франція • Партнер',
+                code: 'FR',
                 dept: 'École nationale supérieure d’informatique et de mathématiques appliquées',
                 focus: 'Data Science, Distributed Systems, Edge AI & Cybersecurity',
+                color: 'from-indigo-500 to-purple-500',
               },
               {
                 name: 'Technische Universität Braunschweig',
-                country: 'Німеччина (Партнер)',
+                country: 'Німеччина • Партнер',
+                code: 'DE',
                 dept: 'Institute for Communications Technology (IfN)',
                 focus: 'Vehicular Communications, Optical Networks, IoT Telemetry',
+                color: 'from-amber-400 to-red-500',
               },
               {
                 name: 'Universitat Politècnica de Catalunya (UPC)',
-                country: 'Іспанія (Асоційований партнер)',
+                country: 'Іспанія • Асоційований партнер',
+                code: 'ES',
                 dept: 'Barcelona School of Telecommunications Engineering',
                 focus: 'Smart Cities, Cloud-Native Core Networks, Big Data Analytics',
+                color: 'from-emerald-400 to-teal-500',
               },
             ].map((uni, i) => (
-              <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div
+                key={i}
+                className="group rounded-3xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 p-6 sm:p-7 transition-all duration-300 flex flex-col justify-between"
+              >
                 <div>
-                  <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-md bg-blue-50 text-blue-700">
-                    {uni.country}
-                  </span>
-                  <h3 className="mt-3 text-lg font-bold text-slate-900">{uni.name}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{uni.dept}</p>
-                  <p className="mt-3 text-sm text-slate-600">{uni.focus}</p>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/10 text-cyan-300 border border-white/10">
+                      {uni.country}
+                    </span>
+                    <span
+                      className={`w-9 h-9 rounded-xl bg-gradient-to-br ${uni.color} text-slate-950 font-black text-xs flex items-center justify-center shadow-md`}
+                    >
+                      {uni.code}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-xl font-bold text-white group-hover:text-cyan-300 transition">
+                    {uni.name}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">{uni.dept}</p>
+                  <div className="mt-4 pt-4 border-t border-white/10 text-sm text-slate-300">
+                    <span className="text-xs text-slate-400 block mb-1">Ключові напрямки R&amp;D:</span>
+                    {uni.focus}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* 3. WORK PACKAGES */}
+        {/* TAB 3: WORK PACKAGES */}
         {activeTab === 'wp' && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-900">Робочі пакети проєкту (Work Packages)</h2>
-              {role !== 'public' && (
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
-                  Доступно редагування статусів ({role})
+          <div className="rounded-3xl bg-white/[0.04] border border-white/10 overflow-hidden">
+            <div className="p-6 sm:p-7 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-bold text-white">Робочі пакети консорціуму (Work Packages)</h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Моніторинг виконання етапів грантової угоди по університетах-лідерах
+                </p>
+              </div>
+              {role !== 'public' ? (
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                  Режим редагування активний ({role})
+                </span>
+              ) : (
+                <span className="text-xs text-slate-400">
+                  Перемкніть роль на «Виконавець», щоб змінювати прогрес
                 </span>
               )}
             </div>
-            <div className="divide-y divide-slate-200">
-              {[
-                { code: 'WP1', title: 'Управління консорціумом та забезпечення якості', lead: 'Aalto University', progress: 95, status: 'Виконується' },
-                { code: 'WP2', title: 'Гармонізація навчальних планів та акредитація', lead: 'TU Braunschweig', progress: 100, status: 'Завершено' },
-                { code: 'WP3', title: 'Академічна мобільність та літні школи CoDaS', lead: 'Grenoble INP', progress: 80, status: 'Виконується' },
-                { code: 'WP4', title: 'Спільні наукові дослідження та публікації (Open Science)', lead: 'UPC / Aalto', progress: 72, status: 'Активна фаза' },
-                { code: 'WP5', title: 'Поширення результатів та взаємодія з індустрією', lead: 'All Partners', progress: 85, status: 'Виконується' },
-              ].map((wp, i) => (
-                <div key={i} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-slate-900 text-white">{wp.code}</span>
-                      <span className="font-semibold text-slate-900">{wp.title}</span>
+
+            <div className="divide-y divide-white/10">
+              {workPackages.map((wp, i) => (
+                <div
+                  key={wp.code}
+                  className="p-5 sm:p-6 hover:bg-white/[0.02] transition flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+                        {wp.code}
+                      </span>
+                      <span className="font-bold text-white text-sm sm:text-base">{wp.title}</span>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">Відповідальний партнер: {wp.lead}</div>
+                    <div className="text-xs text-slate-400 pl-1">Лідер пакету: {wp.lead}</div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-32 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-blue-600 h-full rounded-full" style={{ width: `${wp.progress}%` }} />
+
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="w-36 bg-white/10 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-300"
+                        style={{ width: `${wp.progress}%` }}
+                      />
                     </div>
-                    <span className="text-xs font-semibold text-slate-700 w-10">{wp.progress}%</span>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="text-xs font-bold text-white w-10">{wp.progress}%</span>
+
+                    {role !== 'public' && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleUpdateWpProgress(i, -5)}
+                          className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold"
+                          title="-5%"
+                        >
+                          -
+                        </button>
+                        <button
+                          onClick={() => handleUpdateWpProgress(i, 5)}
+                          className="w-7 h-7 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold"
+                          title="+5%"
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+
+                    <span
+                      className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                        wp.progress === 100
+                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30'
+                          : 'bg-cyan-500/15 text-cyan-300 border-cyan-400/30'
+                      }`}
+                    >
                       {wp.status}
                     </span>
                   </div>
@@ -317,57 +537,78 @@ export default function CoDaSPortal() {
           </div>
         )}
 
-        {/* 4. PUBLICATIONS */}
+        {/* TAB 4: PUBLICATIONS */}
         {activeTab === 'publications' && (
           <div className="space-y-6">
+            {/* Search & Add Controls */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-between">
+              <input
+                type="text"
+                placeholder="Пошук за назвою статті, автором або DOI..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full sm:max-w-md px-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/15 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-cyan-400"
+              />
+              <div className="text-xs text-slate-400 self-center">
+                Знайдено публікацій: <strong className="text-white">{filteredPublications.length}</strong>
+              </div>
+            </div>
+
             {(role === 'executor' || role === 'admin') && (
-              <form onSubmit={handleAddPublication} className="bg-white p-5 rounded-2xl border border-blue-200 shadow-sm space-y-3">
-                <div className="text-sm font-bold text-blue-900">
+              <form
+                onSubmit={handleAddPublication}
+                className="rounded-3xl bg-gradient-to-r from-indigo-950/70 to-cyan-950/40 border border-cyan-400/30 p-6 space-y-4"
+              >
+                <div className="text-sm font-bold text-cyan-300">
                   + Додати нову наукову публікацію до репозиторію (Права: {role})
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <input
                     type="text"
-                    placeholder="Назва статті..."
+                    placeholder="Повна назва наукової публікації..."
                     value={newPubTitle}
                     onChange={(e) => setNewPubTitle(e.target.value)}
-                    className="sm:col-span-2 px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:border-blue-600"
+                    className="sm:col-span-2 px-4 py-2.5 text-sm rounded-xl bg-[#070B14]/80 border border-white/15 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
                   />
                   <input
                     type="text"
-                    placeholder="DOI (напр. 10.1109/...)"
+                    placeholder="DOI (напр. 10.1109/6G.2026)"
                     value={newPubDoi}
                     onChange={(e) => setNewPubDoi(e.target.value)}
-                    className="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:border-blue-600"
+                    className="px-4 py-2.5 text-sm rounded-xl bg-[#070B14]/80 border border-white/15 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-xs font-bold hover:opacity-95 transition shadow-lg shadow-indigo-600/25"
                 >
-                  Опублікувати запис
+                  Опублікувати запис у базі
                 </button>
               </form>
             )}
 
             <div className="space-y-4">
-              {publications.map((pub, i) => (
-                <div key={i} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="font-bold text-slate-900">{pub.title}</h3>
-                      <p className="text-xs text-slate-600 mt-1">{pub.authors}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {pub.venue} ({pub.year})
-                      </p>
+              {filteredPublications.map((pub, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl bg-white/[0.04] hover:bg-white/[0.06] border border-white/10 p-5 sm:p-6 transition"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="space-y-1.5">
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300">
+                        {pub.tag} • {pub.year}
+                      </span>
+                      <h3 className="font-bold text-white text-base sm:text-lg leading-snug">{pub.title}</h3>
+                      <p className="text-xs text-slate-300">{pub.authors}</p>
+                      <p className="text-xs text-slate-400">{pub.venue}</p>
                     </div>
                     <a
                       href={`https://doi.org/${pub.doi}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="shrink-0 text-xs font-mono px-2.5 py-1 rounded-md bg-slate-100 hover:bg-blue-50 text-blue-700 border border-slate-200"
+                      className="shrink-0 self-start text-xs font-mono px-3 py-1.5 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-cyan-300 border border-white/10 transition"
                     >
-                      DOI: {pub.doi}
+                      DOI: {pub.doi} ↗
                     </a>
                   </div>
                 </div>
@@ -376,51 +617,54 @@ export default function CoDaSPortal() {
           </div>
         )}
 
-        {/* 5. REPORTS & KPI */}
+        {/* TAB 5: REPORTS & KPI */}
         {activeTab === 'reports' && (
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div className="rounded-3xl bg-white/[0.04] border border-white/10 p-6 sm:p-8 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Моніторинг KPI та фінансова звітність</h2>
-                <p className="text-sm text-slate-500">Ключові індикатори виконання грантової угоди</p>
+                <h2 className="text-xl font-bold text-white">Аналітика KPI та фінансова звітність</h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Ключові індикатори виконання грантової угоди Європейської Комісії
+                </p>
               </div>
               {role === 'admin' && (
-                <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-xl border border-blue-200">
-                  <span className="text-xs font-semibold text-blue-900">Адмін-коригування KPI:</span>
+                <div className="flex items-center gap-2.5 bg-cyan-500/10 px-4 py-2.5 rounded-2xl border border-cyan-400/30">
+                  <span className="text-xs font-semibold text-cyan-300">Адмін-коригування KPI:</span>
                   <input
                     type="number"
                     min={0}
                     max={100}
                     value={kpiProgress}
                     onChange={(e) => setKpiProgress(Number(e.target.value))}
-                    className="w-16 px-2 py-1 text-xs font-bold rounded border border-blue-300 bg-white"
+                    className="w-16 px-2 py-1 text-xs font-bold rounded-lg border border-cyan-400/40 bg-[#070B14] text-white text-center"
                   />
-                  <span className="text-xs font-bold text-blue-900">%</span>
+                  <span className="text-xs font-bold text-cyan-300">%</span>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-xs text-slate-500">Зараховані студенти (Cohort 1–3)</div>
-                <div className="text-2xl font-bold text-slate-900 mt-1">118 / 120</div>
-                <div className="text-xs text-emerald-600 mt-1">98.3% виконання плану</div>
+              <div className="p-5 rounded-2xl bg-[#0B1120]/90 border border-white/10">
+                <div className="text-xs text-slate-400">Зараховані студенти (Cohort 1–3)</div>
+                <div className="text-3xl font-black text-white mt-2">118 / 120</div>
+                <div className="text-xs text-emerald-400 mt-1.5 font-medium">98.3% виконання плану мобільності</div>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-xs text-slate-500">Спільні наукові статті (Scopus/WoS)</div>
-                <div className="text-2xl font-bold text-slate-900 mt-1">{publications.length + 21}</div>
-                <div className="text-xs text-emerald-600 mt-1">Перевиконання норми на 14%</div>
+              <div className="p-5 rounded-2xl bg-[#0B1120]/90 border border-white/10">
+                <div className="text-xs text-slate-400">Спільні статті (Scopus / WoS)</div>
+                <div className="text-3xl font-black text-white mt-2">{publications.length + 21}</div>
+                <div className="text-xs text-cyan-300 mt-1.5 font-medium">+14% понад цільовий показник</div>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-xs text-slate-500">Освоєння бюджету гранту</div>
-                <div className="text-2xl font-bold text-slate-900 mt-1">€ 3.42M</div>
-                <div className="text-xs text-slate-600 mt-1">Аудит ЄК пройдено без зауважень</div>
+              <div className="p-5 rounded-2xl bg-[#0B1120]/90 border border-white/10">
+                <div className="text-xs text-slate-400">Освоєння бюджету гранту</div>
+                <div className="text-3xl font-black text-white mt-2">€ 3.42M</div>
+                <div className="text-xs text-indigo-300 mt-1.5 font-medium">Проміжний аудит ЄК пройдено</div>
               </div>
             </div>
 
             {role === 'public' && (
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-                Для завантаження внутрішніх фінансових актів та редагування показників KPI перемкніть роль у правому верхньому кутку на <strong>Виконавець</strong> або <strong>Адмін</strong>.
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/25 text-xs text-amber-200">
+                Для редагування показників KPI та керування прогресом робочих пакетів перемкніть роль у верхньому
+                меню на <strong>Виконавець</strong> або <strong>Адмін</strong>.
               </div>
             )}
           </div>
@@ -428,10 +672,10 @@ export default function CoDaSPortal() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white mt-16 py-8 px-4 sm:px-6 text-xs text-slate-500">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="relative z-10 border-t border-white/10 bg-[#050810] mt-16 py-8 px-4 sm:px-6 text-xs text-slate-400">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>© 2026 CoDaS Consortium (Communications Engineering &amp; Data Science). All rights reserved.</div>
-          <div>Co-funded by the Erasmus+ Programme of the European Union</div>
+          <div className="text-slate-500">Co-funded by the Erasmus+ Programme of the European Union</div>
         </div>
       </footer>
     </div>
