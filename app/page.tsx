@@ -39,8 +39,8 @@ export default function CoDaSPortal() {
   const [lang, setLang] = useState<Lang>('ua');
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [registeredUsers, setRegisteredUsers] = useState<UserAccount[]>([
-    { name: 'Олена Коваленко (Виконавець)', email: 'olena@student.edu', password: '123', role: 'applicant' },
-    { name: 'Dr. Jussi Korhonen (Керівник / Admin)', email: 'admin@codas.eu', password: 'admin', role: 'admin' },
+    { name: 'Олена Коваленко', email: 'olena@student.edu', password: '123', role: 'applicant' },
+    { name: 'Dr. Jussi Korhonen', email: 'admin@codas.eu', password: 'admin', role: 'admin' },
   ]);
 
   // Auth Modal
@@ -56,16 +56,16 @@ export default function CoDaSPortal() {
   const [kpiProgress, setKpiProgress] = useState(84);
   const [toast, setToast] = useState<string | null>(null);
 
-  // Applications (Open input fields)
+  // Applications
   const [applications, setApplications] = useState<Application[]>([
     {
       id: 'APP-2026-01',
       fullName: 'Максим Бондаренко',
       email: 'm.bondarenko@kpi.ua',
-      university: 'НТУУ «КПІ ім. Ігоря Сікорського»',
+      university: 'NTUU Igor Sikorsky Kyiv Polytechnic Institute',
       gpa: '4.85',
       track: 'Aalto University (FI) → Grenoble INP (FR)',
-      motivation: 'Дослідження архітектури 6G та розподіленого машинного навчання на межі мережі (Edge AI).',
+      motivation: 'Research on 6G network architecture and distributed Edge AI.',
       portfolioUrl: 'https://github.com/mbondarenko-ml',
       status: 'approved',
       submittedAt: '10.11.2026',
@@ -74,10 +74,10 @@ export default function CoDaSPortal() {
       id: 'APP-2026-02',
       fullName: 'Софія Мельник',
       email: 'sofia.melnyk@lnu.edu.ua',
-      university: 'ЛНУ ім. Івана Франка',
+      university: 'Ivan Franko National University of Lviv',
       gpa: '4.92',
       track: 'TU Braunschweig (DE) → UPC Barcelona (ES)',
-      motivation: 'Оптимізація хмарних телекомунікаційних мереж та кібербезпека IoT-інфраструктури.',
+      motivation: 'Optimization of cloud-native telecom networks and IoT cybersecurity.',
       portfolioUrl: 'https://github.com/smelnyk-net',
       status: 'pending',
       submittedAt: '11.11.2026',
@@ -97,40 +97,34 @@ export default function CoDaSPortal() {
   const [filterTrack, setFilterTrack] = useState<string>('all');
   const [appSearch, setAppSearch] = useState('');
 
-  // Development Ideas (Community & Executors -> Admin moderation)
+  // Development Ideas
   const [ideas, setIdeas] = useState<DevelopmentIdea[]>([
     {
       id: 'IDEA-01',
       author: 'Тарас Савчук',
-      category: 'R&D / Воркшоп',
-      title: 'Хакатон із моделювання 6G-мереж на базі відкритих датасетів CoDaS',
-      description: 'Провести 48-годинний онлайн-хакатон для студентів консорціуму та партнерських вишів України.',
+      category: 'R&D / Workshop',
+      title: '6G Network Simulation Hackathon based on CoDaS Open Datasets',
+      description: 'Organize a 48-hour online hackathon for consortium students and partner universities.',
       status: 'accepted',
     },
     {
       id: 'IDEA-02',
       author: 'Ірина Лисенко',
-      category: 'Навчальний модуль',
-      title: 'Мікрокурс із зелених хмарних обчислень (Green Cloud & Edge AI)',
-      description: 'Додати практичний модуль з оптимізації енергоспоживання ML-моделей у телеком-вузлах.',
+      category: 'Curriculum Module',
+      title: 'Micro-credential Course on Green Cloud & Energy-Efficient Edge AI',
+      description: 'Add a practical module on optimizing ML model energy consumption in telecom nodes.',
       status: 'new',
     },
   ]);
   const [ideaAuthor, setIdeaAuthor] = useState('');
-  const [ideaCategory, setIdeaCategory] = useState('R&D / Воркшоп');
+  const [ideaCategory, setIdeaCategory] = useState('R&D / Workshop');
   const [ideaTitle, setIdeaTitle] = useState('');
   const [ideaDesc, setIdeaDesc] = useState('');
 
-  // Work Packages & Deliverables
-  const [workPackages, setWorkPackages] = useState([
-    { code: 'WP1', title: 'Управління консорціумом та забезпечення якості', deliverable: 'D1.2 Звіт ради якості (Q3 2026)', deadline: '15.12.2026', lead: 'Aalto University', progress: 95 },
-    { code: 'WP2', title: 'Гармонізація навчальних планів та акредитація', deliverable: 'D2.1 Спільний стандарт 120 ECTS', deadline: '01.09.2026', lead: 'TU Braunschweig', progress: 100 },
-    { code: 'WP3', title: 'Академічна мобільність та літні школи CoDaS', deliverable: 'D3.3 Каталог треків мобільності', deadline: '20.01.2027', lead: 'Grenoble INP', progress: 80 },
-    { code: 'WP4', title: 'Спільні наукові дослідження (Open Science)', deliverable: 'D4.2 Відкритий репозиторій датасетів', deadline: '30.03.2027', lead: 'UPC Barcelona', progress: 72 },
-    { code: 'WP5', title: 'Поширення результатів та індустріальні кейси', deliverable: 'D5.1 План взаємодії з Nokia/Ericsson', deadline: '10.05.2027', lead: 'All Partners', progress: 88 },
-  ]);
+  // Work Packages Progress
+  const [wpProgressList, setWpProgressList] = useState([95, 100, 80, 72, 88]);
 
-  // Publications (with indexation filter)
+  // Publications
   const [pubSearch, setPubSearch] = useState('');
   const [pubIndexFilter, setPubIndexFilter] = useState<'all' | 'Scopus' | 'WoS'>('all');
   const [newPubTitle, setNewPubTitle] = useState('');
@@ -163,25 +157,28 @@ export default function CoDaSPortal() {
     },
   ]);
 
-  // Events & News
+  // Events
   const [events, setEvents] = useState([
     {
       title: 'CoDaS Summer School: 6G & Edge Intelligence',
-      type: 'Літня школа / Воркшоп',
+      typeUa: 'Літня школа / Воркшоп',
+      typeEn: 'Summer School / Workshop',
       date: '14–18.07.2026',
       location: 'Espoo, Finland (Aalto University)',
       participants: 85,
     },
     {
       title: 'International Symposium on Data-Driven Telecom Networks',
-      type: 'Міжнародна конференція',
+      typeUa: 'Міжнародна конференція',
+      typeEn: 'International Conference',
       date: '22.10.2026',
       location: 'Grenoble, France (Grenoble INP)',
       participants: 140,
     },
     {
       title: 'CoDaS Consortium Mid-Term Review & Industry Day',
-      type: 'Семінар консорціуму',
+      typeUa: 'Семінар консорціуму',
+      typeEn: 'Consortium Seminar',
       date: '04.12.2026',
       location: 'Barcelona, Spain (UPC) / Online',
       participants: 62,
@@ -204,42 +201,56 @@ export default function CoDaSPortal() {
   }, []);
 
   const role: Role = currentUser ? currentUser.role : 'public';
+  const isUa = lang === 'ua';
 
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Translations Dictionary (UA / EN)
-  const t = {
-    subtitle: lang === 'ua' ? 'Портал звітності та мобільності консорціуму' : 'Consortium Reporting & Mobility Portal',
-    guestMode: lang === 'ua' ? 'Режим: Відвідувач (Гість)' : 'Mode: Public Visitor',
-    loginBtn: lang === 'ua' ? 'Увійти / Реєстрація' : 'Login / Sign Up',
-    logoutBtn: lang === 'ua' ? 'Вийти' : 'Logout',
-    heroTitle1: 'Communications Engineering & ',
-    heroDesc:
-      lang === 'ua'
-        ? 'Офіційна платформа звітності та академічної мобільності спільного магістерського проєкту ЄС: робочі пакети, публікації (DOI), заходи, KPI та відбір кандидатів.'
-        : 'Official reporting and academic mobility platform of the EU Joint Master project: work packages, DOI publications, events, KPIs, and candidate selection.',
-    tabs: {
-      overview: lang === 'ua' ? 'Паспорт' : 'Project Passport',
-      team: lang === 'ua' ? 'Команда та ВНЗ' : 'Team & Consortium',
-      wp: lang === 'ua' ? 'Робочі пакети' : 'Work Packages',
-      publications: lang === 'ua' ? 'Публікації' : 'Publications',
-      events_news: lang === 'ua' ? 'Заходи та Новини' : 'Events & News',
-      applications:
-        role === 'admin'
-          ? lang === 'ua'
-            ? `Відбір і Ідеї (${applications.length})`
-            : `Selection & Ideas (${applications.length})`
-          : lang === 'ua'
-            ? 'Участь та Ідеї'
-            : 'Apply & Ideas',
-      reports: lang === 'ua' ? 'Звіти та KPI' : 'Reports & KPI',
+  const workPackagesData = [
+    {
+      code: 'WP1',
+      title: isUa ? 'Управління консорціумом та забезпечення якості' : 'Consortium Management & Quality Assurance',
+      deliverable: isUa ? 'D1.2 Звіт ради якості (Q3 2026)' : 'D1.2 Quality Assurance Board Report (Q3 2026)',
+      deadline: '15.12.2026',
+      lead: 'Aalto University',
+      progress: wpProgressList[0],
     },
-  };
+    {
+      code: 'WP2',
+      title: isUa ? 'Гармонізація навчальних планів та акредитація' : 'Curriculum Harmonization & Joint Accreditation',
+      deliverable: isUa ? 'D2.1 Спільний стандарт 120 ECTS' : 'D2.1 Joint 120 ECTS Curriculum Standard',
+      deadline: '01.09.2026',
+      lead: 'TU Braunschweig',
+      progress: wpProgressList[1],
+    },
+    {
+      code: 'WP3',
+      title: isUa ? 'Академічна мобільність та літні школи CoDaS' : 'Academic Mobility & CoDaS Summer Schools',
+      deliverable: isUa ? 'D3.3 Каталог треків мобільності' : 'D3.3 Student Mobility Tracks Catalogue',
+      deadline: '20.01.2027',
+      lead: 'Grenoble INP',
+      progress: wpProgressList[2],
+    },
+    {
+      code: 'WP4',
+      title: isUa ? 'Спільні наукові дослідження (Open Science)' : 'Joint Research & Open Science Repository',
+      deliverable: isUa ? 'D4.2 Відкритий репозиторій датасетів' : 'D4.2 Open 6G/AI Datasets Repository',
+      deadline: '30.03.2027',
+      lead: 'UPC Barcelona',
+      progress: wpProgressList[3],
+    },
+    {
+      code: 'WP5',
+      title: isUa ? 'Поширення результатів та індустріальні кейси' : 'Dissemination & Industrial R&D Cases',
+      deliverable: isUa ? 'D5.1 План взаємодії з Nokia/Ericsson' : 'D5.1 Nokia/Ericsson Industry Cooperation Plan',
+      deadline: '10.05.2027',
+      lead: 'All Partners',
+      progress: wpProgressList[4],
+    },
+  ];
 
-  // Auth Handlers
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
@@ -250,7 +261,7 @@ export default function CoDaSPortal() {
       );
       if (!found) {
         setAuthError(
-          lang === 'ua'
+          isUa
             ? 'Невірний email або пароль. Використайте швидкий демо-вхід нижче.'
             : 'Invalid email or password. Use quick demo login below.'
         );
@@ -261,10 +272,10 @@ export default function CoDaSPortal() {
       setIsAuthModalOpen(false);
       setAuthEmail('');
       setAuthPassword('');
-      showToast(`${lang === 'ua' ? 'Вітаємо' : 'Welcome'}, ${found.name}!`);
+      showToast(`${isUa ? 'Вітаємо' : 'Welcome'}, ${found.name}!`);
     } else {
       if (!authName.trim() || !authEmail.trim() || !authPassword.trim()) {
-        setAuthError('Заповніть усі поля для реєстрації.');
+        setAuthError(isUa ? 'Заповніть усі поля для реєстрації.' : 'Please fill in all fields.');
         return;
       }
       const newUser: UserAccount = {
@@ -283,7 +294,7 @@ export default function CoDaSPortal() {
       setAuthEmail('');
       setAuthPassword('');
       setActiveTab('applications');
-      showToast('Акаунт учасника / виконавця створено!');
+      showToast(isUa ? 'Акаунт учасника / виконавця створено!' : 'Participant account created!');
     }
   };
 
@@ -291,7 +302,7 @@ export default function CoDaSPortal() {
     setCurrentUser(null);
     localStorage.removeItem('codas_current_user');
     setActiveTab('overview');
-    showToast(lang === 'ua' ? 'Ви вийшли з системи' : 'Logged out');
+    showToast(isUa ? 'Ви вийшли з системи' : 'Logged out');
   };
 
   const fillDemoCredentials = (type: 'applicant' | 'admin') => {
@@ -306,7 +317,6 @@ export default function CoDaSPortal() {
     }
   };
 
-  // Application Submission (Open Name & Email fields)
   const handleApplicationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!appFullName.trim() || !appEmail.trim() || !appUniversity.trim() || !appGpa.trim() || !appMotivation.trim()) return;
@@ -333,23 +343,30 @@ export default function CoDaSPortal() {
     setAppGpa('');
     setAppPortfolio('');
     setAppMotivation('');
-    showToast('Кандидатуру успішно надіслано на розгляд комісії!');
+    showToast(isUa ? 'Кандидатуру успішно надіслано на розгляд!' : 'Application submitted successfully!');
   };
 
   const handleApplicationStatus = (id: string, status: 'approved' | 'rejected') => {
     const updated = applications.map((app) => (app.id === id ? { ...app, status } : app));
     setApplications(updated);
     localStorage.setItem('codas_applications', JSON.stringify(updated));
-    showToast(status === 'approved' ? 'Кандидата схвалено!' : 'Заявку відхилено.');
+    showToast(
+      status === 'approved'
+        ? isUa
+          ? 'Кандидата схвалено!'
+          : 'Candidate approved!'
+        : isUa
+          ? 'Заявку відхилено.'
+          : 'Application rejected.'
+    );
   };
 
-  // Development Idea Submission
   const handleIdeaSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!ideaTitle.trim() || !ideaDesc.trim()) return;
     const newIdea: DevelopmentIdea = {
       id: `IDEA-0${ideas.length + 1}`,
-      author: ideaAuthor.trim() || currentUser?.name || 'Учасник спільноти',
+      author: ideaAuthor.trim() || currentUser?.name || (isUa ? 'Учасник спільноти' : 'Community Member'),
       category: ideaCategory,
       title: ideaTitle.trim(),
       description: ideaDesc.trim(),
@@ -361,22 +378,19 @@ export default function CoDaSPortal() {
     setIdeaAuthor('');
     setIdeaTitle('');
     setIdeaDesc('');
-    showToast('Ідею для розвитку проєкту додано!');
+    showToast(isUa ? 'Ідею для розвитку проєкту додано!' : 'Development idea submitted!');
   };
 
   const handleAcceptIdea = (id: string) => {
     const updated = ideas.map((item) => (item.id === id ? { ...item, status: 'accepted' as const } : item));
     setIdeas(updated);
     localStorage.setItem('codas_ideas', JSON.stringify(updated));
-    showToast('Ідею схвалено до беклогу наступного етапу!');
+    showToast(isUa ? 'Ідею схвалено до беклогу!' : 'Idea accepted into backlog!');
   };
 
-  // WP, Publications, Events Handlers
   const handleUpdateWpProgress = (index: number, delta: number) => {
-    setWorkPackages((prev) =>
-      prev.map((wp, i) => (i === index ? { ...wp, progress: Math.min(100, Math.max(0, wp.progress + delta)) } : wp))
-    );
-    showToast('Прогрес робочого пакета оновлено');
+    setWpProgressList((prev) => prev.map((val, i) => (i === index ? Math.min(100, Math.max(0, val + delta)) : val)));
+    showToast(isUa ? 'Прогрес робочого пакета оновлено' : 'Work package progress updated');
   };
 
   const handleAddPublication = (e: React.FormEvent) => {
@@ -395,7 +409,7 @@ export default function CoDaSPortal() {
     ]);
     setNewPubTitle('');
     setNewPubDoi('');
-    showToast('Публікацію додано до реєстру DOI');
+    showToast(isUa ? 'Публікацію додано до реєстру DOI' : 'Publication added to DOI registry');
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
@@ -404,7 +418,8 @@ export default function CoDaSPortal() {
     setEvents([
       {
         title: newEventTitle,
-        type: 'Академічний семінар',
+        typeUa: 'Академічний семінар',
+        typeEn: 'Academic Seminar',
         date: newEventDate,
         location: newEventLocation || 'Online / Consortium',
         participants: 45,
@@ -414,10 +429,9 @@ export default function CoDaSPortal() {
     setNewEventTitle('');
     setNewEventDate('');
     setNewEventLocation('');
-    showToast('Захід додано до календаря проєкту');
+    showToast(isUa ? 'Захід додано до календаря' : 'Event added to calendar');
   };
 
-  // Filtered Lists
   const filteredApplications = applications.filter((app) => {
     const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
     const matchesTrack = filterTrack === 'all' || app.track.includes(filterTrack);
@@ -438,6 +452,26 @@ export default function CoDaSPortal() {
   });
 
   const approvedCount = applications.filter((a) => a.status === 'approved').length;
+
+  const navTabs: { id: TabId; label: string }[] = [
+    { id: 'overview', label: isUa ? 'Паспорт' : 'Passport' },
+    { id: 'team', label: isUa ? 'Команда та ВНЗ' : 'Team & Consortium' },
+    { id: 'wp', label: isUa ? 'Робочі пакети' : 'Work Packages' },
+    { id: 'publications', label: isUa ? 'Публікації' : 'Publications' },
+    { id: 'events_news', label: isUa ? 'Заходи та Новини' : 'Events & News' },
+    {
+      id: 'applications',
+      label:
+        role === 'admin'
+          ? isUa
+            ? `Відбір і Ідеї (${applications.length})`
+            : `Selection & Ideas (${applications.length})`
+          : isUa
+            ? 'Участь та Ідеї'
+            : 'Apply & Ideas',
+    },
+    { id: 'reports', label: isUa ? 'Звіти та KPI' : 'Reports & KPI' },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F7F3FC] via-[#EFE7FA] to-[#F9F2FA] text-[#2D1B4E] font-sans selection:bg-[#9D65D0] selection:text-white relative overflow-x-hidden">
@@ -469,7 +503,13 @@ export default function CoDaSPortal() {
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#9333EA]">CoDaS Access Control</span>
               <h2 className="text-2xl font-black text-[#2D1B4E] mt-1">
-                {authMode === 'login' ? 'Вхід до системи' : 'Реєстрація учасника'}
+                {authMode === 'login'
+                  ? isUa
+                    ? 'Вхід до системи'
+                    : 'Sign In to Portal'
+                  : isUa
+                    ? 'Реєстрація учасника'
+                    : 'Participant Registration'}
               </h2>
             </div>
 
@@ -484,7 +524,7 @@ export default function CoDaSPortal() {
                   authMode === 'login' ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white' : 'text-[#6B5B85]'
                 }`}
               >
-                Вхід (Login)
+                {isUa ? 'Вхід (Login)' : 'Login'}
               </button>
               <button
                 type="button"
@@ -496,18 +536,20 @@ export default function CoDaSPortal() {
                   authMode === 'register' ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white' : 'text-[#6B5B85]'
                 }`}
               >
-                Реєстрація (Sign Up)
+                {isUa ? 'Реєстрація (Sign Up)' : 'Sign Up'}
               </button>
             </div>
 
             <form onSubmit={handleAuthSubmit} className="space-y-3.5">
               {authMode === 'register' && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#4C3575] mb-1">Прізвище та ім&apos;я</label>
+                  <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                    {isUa ? "Прізвище та ім'я" : 'Full Name'}
+                  </label>
                   <input
                     type="text"
                     required
-                    placeholder="Іван Мельник"
+                    placeholder={isUa ? 'Іван Мельник' : 'John Doe'}
                     value={authName}
                     onChange={(e) => setAuthName(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
@@ -526,7 +568,9 @@ export default function CoDaSPortal() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#4C3575] mb-1">Пароль</label>
+                <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                  {isUa ? 'Пароль' : 'Password'}
+                </label>
                 <input
                   type="password"
                   required
@@ -545,26 +589,34 @@ export default function CoDaSPortal() {
                 type="submit"
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] text-white text-sm font-bold shadow-lg shadow-purple-300"
               >
-                {authMode === 'login' ? 'Увійти в кабінет' : 'Зареєструватися'}
+                {authMode === 'login'
+                  ? isUa
+                    ? 'Увійти в кабінет'
+                    : 'Login'
+                  : isUa
+                    ? 'Зареєструватися'
+                    : 'Create Account'}
               </button>
             </form>
 
             <div className="pt-3 border-t border-[#EFE5FA] space-y-2">
-              <div className="text-[11px] text-[#6B5B85] text-center">Швидке заповнення для перевірки ролей:</div>
+              <div className="text-[11px] text-[#6B5B85] text-center">
+                {isUa ? 'Швидке заповнення для перевірки ролей:' : 'Quick demo credentials for role testing:'}
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('applicant')}
                   className="py-2 px-3 rounded-xl bg-[#F3E8FF] hover:bg-[#E9D5FF] border border-[#D8B4FE] text-[11px] font-bold text-[#6B21A8]"
                 >
-                  Виконавець / Учасник
+                  {isUa ? 'Виконавець / Учасник' : 'Demo Applicant'}
                 </button>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('admin')}
                   className="py-2 px-3 rounded-xl bg-[#FAE8FF] hover:bg-[#F5D0FE] border border-[#F0ABFC] text-[11px] font-bold text-[#86198F]"
                 >
-                  Керівник / Адмін
+                  {isUa ? 'Керівник / Адмін' : 'Demo Admin'}
                 </button>
               </div>
             </div>
@@ -586,35 +638,36 @@ export default function CoDaSPortal() {
                   Erasmus+ EMJM
                 </span>
               </div>
-              <p className="text-[10px] text-[#6B5B85] hidden sm:block">{t.subtitle}</p>
+              <p className="text-[10px] text-[#6B5B85] hidden sm:block">
+                {isUa ? 'Портал звітності та мобільності консорціуму' : 'Consortium Reporting & Mobility Portal'}
+              </p>
             </div>
           </div>
 
           {/* Center Navigation */}
           <nav className="hidden lg:flex items-center gap-1 bg-[#F5EEFD] p-1 rounded-2xl border border-[#E6D6F8]">
-            {(Object.keys(t.tabs) as TabId[]).map((tabKey) => (
+            {navTabs.map((tab) => (
               <button
-                key={tabKey}
-                onClick={() => setActiveTab(tabKey)}
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
-                  activeTab === tabKey
+                  activeTab === tab.id
                     ? 'bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] text-white shadow-sm'
                     : 'text-[#5B467A] hover:text-[#2D1B4E] hover:bg-white/70'
                 }`}
               >
-                {t.tabs[tabKey]}
+                {tab.label}
               </button>
             ))}
           </nav>
 
           {/* Language Switcher + Auth Controls */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Bilingual Switcher UA / EN */}
             <div className="flex items-center bg-[#F5EEFD] p-0.5 rounded-xl border border-[#E6D6F8] text-[11px] font-bold">
               <button
                 onClick={() => setLang('ua')}
                 className={`px-2 py-1 rounded-lg transition ${
-                  lang === 'ua' ? 'bg-[#8B5CF6] text-white' : 'text-[#6B5B85]'
+                  isUa ? 'bg-[#8B5CF6] text-white' : 'text-[#6B5B85]'
                 }`}
               >
                 UA
@@ -622,7 +675,7 @@ export default function CoDaSPortal() {
               <button
                 onClick={() => setLang('en')}
                 className={`px-2 py-1 rounded-lg transition ${
-                  lang === 'en' ? 'bg-[#8B5CF6] text-white' : 'text-[#6B5B85]'
+                  !isUa ? 'bg-[#8B5CF6] text-white' : 'text-[#6B5B85]'
                 }`}
               >
                 EN
@@ -637,21 +690,27 @@ export default function CoDaSPortal() {
                 }}
                 className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#C084FC] text-white text-xs font-bold hover:opacity-95 transition shadow-md shadow-purple-200"
               >
-                {t.loginBtn}
+                {isUa ? 'Увійти / Реєстрація' : 'Login / Sign Up'}
               </button>
             ) : (
               <div className="flex items-center gap-2 bg-[#F5EEFD] pl-2.5 pr-1 py-1 rounded-2xl border border-[#DFCCF5]">
                 <div className="text-right hidden sm:block">
                   <div className="text-[11px] font-bold text-[#2D1B4E] leading-tight">{currentUser.name}</div>
                   <div className="text-[9px] font-extrabold uppercase text-[#9333EA]">
-                    {currentUser.role === 'admin' ? 'Керівник / Admin' : 'Виконавець / Учасник'}
+                    {currentUser.role === 'admin'
+                      ? isUa
+                        ? 'Керівник / Admin'
+                        : 'Project Lead / Admin'
+                      : isUa
+                        ? 'Виконавець / Учасник'
+                        : 'Executor / Applicant'}
                   </div>
                 </div>
                 <button
                   onClick={handleLogout}
                   className="px-2.5 py-1 rounded-xl bg-white hover:bg-rose-50 hover:text-rose-600 text-[11px] font-semibold text-[#5B467A] border border-[#E6D6F8]"
                 >
-                  {t.logoutBtn}
+                  {isUa ? 'Вийти' : 'Logout'}
                 </button>
               </div>
             )}
@@ -660,15 +719,15 @@ export default function CoDaSPortal() {
 
         {/* Mobile Sub-nav */}
         <div className="flex lg:hidden overflow-x-auto gap-1.5 px-4 pb-3">
-          {(Object.keys(t.tabs) as TabId[]).map((tabKey) => (
+          {navTabs.map((tab) => (
             <button
-              key={tabKey}
-              onClick={() => setActiveTab(tabKey)}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap ${
-                activeTab === tabKey ? 'bg-[#8B5CF6] text-white' : 'bg-white text-[#5B467A] border border-[#E6D6F8]'
+                activeTab === tab.id ? 'bg-[#8B5CF6] text-white' : 'bg-white text-[#5B467A] border border-[#E6D6F8]'
               }`}
             >
-              {t.tabs[tabKey]}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -686,24 +745,32 @@ export default function CoDaSPortal() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#2D1B4E]">
-                {t.heroTitle1}
+                Communications Engineering &amp;{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF]">
                   Data Science (CoDaS)
                 </span>
               </h1>
 
-              <p className="text-[#5B467A] text-sm sm:text-base leading-relaxed max-w-2xl">{t.heroDesc}</p>
+              <p className="text-[#5B467A] text-sm sm:text-base leading-relaxed max-w-2xl">
+                {isUa
+                  ? 'Офіційна платформа звітності та академічної мобільності спільного магістерського проєкту ЄС: робочі пакети, публікації (DOI), заходи, KPI та відбір кандидатів.'
+                  : 'Official reporting and academic mobility platform of the EU Joint Master project: work packages, DOI publications, events, KPIs, and candidate selection.'}
+              </p>
             </div>
 
             <div className="shrink-0 rounded-2xl bg-white/90 border border-[#E2D0F8] p-4 min-w-[250px] space-y-2 shadow-sm">
               <div className="flex items-center justify-between text-xs text-[#6B5B85]">
-                <span>{lang === 'ua' ? 'Рівень доступу (RBAC)' : 'Access Role (RBAC)'}</span>
+                <span>{isUa ? 'Рівень доступу (RBAC)' : 'Access Role (RBAC)'}</span>
                 <span className="text-[#7E22CE] font-bold">● Online</span>
               </div>
               <div className="text-sm font-extrabold text-[#2D1B4E]">
-                {role === 'public' && (lang === 'ua' ? 'Відвідувач (Публічний звіт)' : 'Public Visitor')}
-                {role === 'applicant' && <span className="text-[#C026D3]">Виконавець / Учасник</span>}
-                {role === 'admin' && <span className="text-[#7C3AED]">Керівник проєкту / Адмін</span>}
+                {role === 'public' && (isUa ? 'Відвідувач (Публічний звіт)' : 'Public Visitor (Read-Only)')}
+                {role === 'applicant' && (
+                  <span className="text-[#C026D3]">{isUa ? 'Виконавець / Учасник' : 'Executor / Applicant'}</span>
+                )}
+                {role === 'admin' && (
+                  <span className="text-[#7C3AED]">{isUa ? 'Керівник проєкту / Адмін' : 'Project Lead / Admin'}</span>
+                )}
               </div>
             </div>
           </div>
@@ -714,10 +781,30 @@ export default function CoDaSPortal() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: lang === 'ua' ? 'Код / Програма' : 'Grant / Programme', value: '101082451 / EMJM', sub: 'Erasmus+ Key Action 2', accent: 'from-[#8B5CF6] to-[#A855F7]' },
-                { label: lang === 'ua' ? 'Терміни виконання' : 'Implementation Period', value: '2023 – 2027', sub: '48 місяців (Етап 3)', accent: 'from-[#C084FC] to-[#E879F9]' },
-                { label: lang === 'ua' ? 'Бюджет гранту ЄС' : 'EU Grant Budget', value: '€ 4,860,000', sub: 'European Commission (EACEA)', accent: 'from-[#A78BFA] to-[#F472B6]' },
-                { label: lang === 'ua' ? 'Виконання KPI' : 'KPI Achievement', value: `${kpiProgress}%`, sub: `${116 + approvedCount}/120 студентів`, accent: 'from-[#7C3AED] to-[#D946EF]' },
+                {
+                  label: isUa ? 'Код / Програма' : 'Grant / Programme',
+                  value: '101082451 / EMJM',
+                  sub: 'Erasmus+ Key Action 2',
+                  accent: 'from-[#8B5CF6] to-[#A855F7]',
+                },
+                {
+                  label: isUa ? 'Терміни виконання' : 'Implementation Period',
+                  value: '2023 – 2027',
+                  sub: isUa ? '48 місяців (Етап 3)' : '48 Months (Phase 3)',
+                  accent: 'from-[#C084FC] to-[#E879F9]',
+                },
+                {
+                  label: isUa ? 'Бюджет гранту ЄС' : 'EU Grant Budget',
+                  value: '€ 4,860,000',
+                  sub: 'European Commission (EACEA)',
+                  accent: 'from-[#A78BFA] to-[#F472B6]',
+                },
+                {
+                  label: isUa ? 'Виконання KPI' : 'KPI Achievement',
+                  value: `${kpiProgress}%`,
+                  sub: isUa ? `${116 + approvedCount}/120 студентів` : `${116 + approvedCount}/120 students enrolled`,
+                  accent: 'from-[#7C3AED] to-[#D946EF]',
+                },
               ].map((stat, i) => (
                 <div key={i} className="rounded-2xl bg-white/90 border border-[#E2D0F8] p-5 shadow-sm">
                   <div className={`w-10 h-1.5 rounded-full bg-gradient-to-r ${stat.accent} mb-3`} />
@@ -730,52 +817,93 @@ export default function CoDaSPortal() {
 
             <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-4 shadow-sm">
               <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">
-                {lang === 'ua' ? 'Анотація, мета та завдання проєкту' : 'Project Abstract, Goal & Objectives'}
+                {isUa ? 'Анотація, мета та завдання проєкту' : 'Project Abstract, Goal & Objectives'}
               </span>
               <h2 className="text-2xl font-bold text-[#2D1B4E]">
                 Communications Engineering and Data Science (CoDaS)
               </h2>
               <p className="text-[#5B467A] text-sm sm:text-base leading-relaxed">
-                Міжнародний науково-освітній проєкт спрямований на підготовку магістрів та проведення спільних
-                досліджень у галузі телекомунікаційних мереж 5G/6G, хмарних обчислень, кібербезпеки та науки про дані
-                (Data Science). Програма реалізується консорціумом 4 провідних технічних університетів Європи.
+                {isUa
+                  ? 'Міжнародний науково-освітній проєкт спрямований на підготовку магістрів та проведення спільних досліджень у галузі телекомунікаційних мереж 5G/6G, хмарних обчислень, кібербезпеки та науки про дані (Data Science). Програма реалізується консорціумом 4 провідних технічних університетів Європи.'
+                  : 'An international research and educational initiative aimed at training MSc specialists and conducting joint research in 5G/6G telecommunication networks, cloud computing, cybersecurity, and Data Science across 4 leading European technical universities.'}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 <div className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="font-bold text-sm text-[#7E22CE]">Завдання 1: Мобільність 120 ECTS</div>
-                  <p className="text-xs text-[#6B5B85] mt-1">Навчання за системою подвійних дипломів у двох країнах ЄС.</p>
+                  <div className="font-bold text-sm text-[#7E22CE]">
+                    {isUa ? 'Завдання 1: Мобільність 120 ECTS' : 'Objective 1: 120 ECTS Mobility'}
+                  </div>
+                  <p className="text-xs text-[#6B5B85] mt-1">
+                    {isUa
+                      ? 'Навчання за системою подвійних дипломів у двох країнах ЄС.'
+                      : 'Double-degree master studies across two EU partner universities.'}
+                  </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="font-bold text-sm text-[#7E22CE]">Завдання 2: Відкрита наука</div>
-                  <p className="text-xs text-[#6B5B85] mt-1">Публікація результатів досліджень у виданнях Scopus та Web of Science.</p>
+                  <div className="font-bold text-sm text-[#7E22CE]">
+                    {isUa ? 'Завдання 2: Відкрита наука' : 'Objective 2: Open Science'}
+                  </div>
+                  <p className="text-xs text-[#6B5B85] mt-1">
+                    {isUa
+                      ? 'Публікація результатів досліджень у виданнях Scopus та Web of Science.'
+                      : 'Publishing open-access research results in Scopus and Web of Science.'}
+                  </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="font-bold text-sm text-[#7E22CE]">Завдання 3: Індустріальне R&amp;D</div>
-                  <p className="text-xs text-[#6B5B85] mt-1">Спільні проєкти з Nokia, Ericsson, Siemens та телеком-операторами.</p>
+                  <div className="font-bold text-sm text-[#7E22CE]">
+                    {isUa ? 'Завдання 3: Індустріальне R&D' : 'Objective 3: Industrial R&D'}
+                  </div>
+                  <p className="text-xs text-[#6B5B85] mt-1">
+                    {isUa
+                      ? 'Спільні проєкти з Nokia, Ericsson, Siemens та телеком-операторами.'
+                      : 'Joint R&D projects with Nokia, Ericsson, Siemens, and telecom operators.'}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* 2. TEAM (ORCID & AFFILIATION) + CONSORTIUM */}
+        {/* 2. TEAM & CONSORTIUM */}
         {activeTab === 'team' && (
           <div className="space-y-8">
-            {/* Project Team with ORCID */}
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-[#2D1B4E]">
-                {lang === 'ua' ? 'Ключові виконавці проєкту (ORCID та афіліація)' : 'Project Team Members (ORCID & Affiliation)'}
+                {isUa ? 'Ключові виконавці проєкту (ORCID та афіліація)' : 'Project Team Members (ORCID & Affiliation)'}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { name: 'Prof. Jussi Korhonen', role: 'Координатор проєкту (Lead)', uni: 'Aalto University (FI)', orcid: '0000-0002-1825-0097' },
-                  { name: 'Dr. Laurent Moreau', role: 'Керівник WP3 (Мобільність)', uni: 'Grenoble INP – UGA (FR)', orcid: '0000-0001-5109-3700' },
-                  { name: 'Prof. Markus Weber', role: 'Керівник WP2 (Акредитація)', uni: 'TU Braunschweig (DE)', orcid: '0000-0003-2419-8821' },
-                  { name: 'Dr. Elena García', role: 'Керівник WP4 (Open Science)', uni: 'UPC Barcelona (ES)', orcid: '0000-0002-9410-5514' },
+                  {
+                    name: 'Prof. Jussi Korhonen',
+                    role: isUa ? 'Координатор проєкту (Lead)' : 'Project Coordinator (Lead)',
+                    uni: 'Aalto University (FI)',
+                    orcid: '0000-0002-1825-0097',
+                  },
+                  {
+                    name: 'Dr. Laurent Moreau',
+                    role: isUa ? 'Керівник WP3 (Мобільність)' : 'WP3 Lead (Mobility)',
+                    uni: 'Grenoble INP – UGA (FR)',
+                    orcid: '0000-0001-5109-3700',
+                  },
+                  {
+                    name: 'Prof. Markus Weber',
+                    role: isUa ? 'Керівник WP2 (Акредитація)' : 'WP2 Lead (Accreditation)',
+                    uni: 'TU Braunschweig (DE)',
+                    orcid: '0000-0003-2419-8821',
+                  },
+                  {
+                    name: 'Dr. Elena García',
+                    role: isUa ? 'Керівник WP4 (Open Science)' : 'WP4 Lead (Open Science)',
+                    uni: 'UPC Barcelona (ES)',
+                    orcid: '0000-0002-9410-5514',
+                  },
                 ].map((member, i) => (
                   <div key={i} className="rounded-2xl bg-white/90 border border-[#E2D0F8] p-5 space-y-2 shadow-sm">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#E879F9] text-white font-bold text-xs flex items-center justify-center">
-                      {member.name.split(' ').slice(1).map((n) => n[0]).join('')}
+                      {member.name
+                        .split(' ')
+                        .slice(1)
+                        .map((n) => n[0])
+                        .join('')}
                     </div>
                     <h3 className="font-bold text-sm text-[#2D1B4E]">{member.name}</h3>
                     <div className="text-xs font-semibold text-[#9333EA]">{member.role}</div>
@@ -793,17 +921,40 @@ export default function CoDaSPortal() {
               </div>
             </div>
 
-            {/* Consortium Universities */}
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-[#2D1B4E]">
-                {lang === 'ua' ? 'Університети-партнери консорціуму' : 'Consortium Partner Universities'}
+                {isUa ? 'Університети-партнери консорціуму' : 'Consortium Partner Universities'}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {[
-                  { name: 'Aalto University', country: 'Фінляндія • Координатор', code: 'FI', dept: 'Department of Information and Communications Engineering', focus: '5G/6G Wireless Systems, Autonomous Networks, Signal Processing' },
-                  { name: 'Grenoble INP – UGA', country: 'Франція • Партнер', code: 'FR', dept: 'École nationale supérieure d’informatique et de mathématiques appliquées', focus: 'Data Science, Distributed Systems, Edge AI & Cybersecurity' },
-                  { name: 'Technische Universität Braunschweig', country: 'Німеччина • Партнер', code: 'DE', dept: 'Institute for Communications Technology (IfN)', focus: 'Vehicular Communications, Optical Networks, IoT Telemetry' },
-                  { name: 'Universitat Politècnica de Catalunya (UPC)', country: 'Іспанія • Асоційований партнер', code: 'ES', dept: 'Barcelona School of Telecommunications Engineering', focus: 'Smart Cities, Cloud-Native Core Networks, Big Data Analytics' },
+                  {
+                    name: 'Aalto University',
+                    country: isUa ? 'Фінляндія • Координатор' : 'Finland • Coordinator',
+                    code: 'FI',
+                    dept: 'Department of Information and Communications Engineering',
+                    focus: '5G/6G Wireless Systems, Autonomous Networks, Signal Processing',
+                  },
+                  {
+                    name: 'Grenoble INP – UGA',
+                    country: isUa ? 'Франція • Партнер' : 'France • Partner',
+                    code: 'FR',
+                    dept: 'École nationale supérieure d’informatique et de mathématiques appliquées',
+                    focus: 'Data Science, Distributed Systems, Edge AI & Cybersecurity',
+                  },
+                  {
+                    name: 'Technische Universität Braunschweig',
+                    country: isUa ? 'Німеччина • Партнер' : 'Germany • Partner',
+                    code: 'DE',
+                    dept: 'Institute for Communications Technology (IfN)',
+                    focus: 'Vehicular Communications, Optical Networks, IoT Telemetry',
+                  },
+                  {
+                    name: 'Universitat Politècnica de Catalunya (UPC)',
+                    country: isUa ? 'Іспанія • Асоційований партнер' : 'Spain • Associated Partner',
+                    code: 'ES',
+                    dept: 'Barcelona School of Telecommunications Engineering',
+                    focus: 'Smart Cities, Cloud-Native Core Networks, Big Data Analytics',
+                  },
                 ].map((uni, i) => (
                   <div key={i} className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 space-y-2.5 shadow-sm">
                     <div className="flex items-center justify-between">
@@ -827,13 +978,25 @@ export default function CoDaSPortal() {
           <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] overflow-hidden shadow-sm">
             <div className="p-6 border-b border-[#EFE5FA] flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold text-[#2D1B4E]">Робочі пакети (WP) та заплановані результати (Deliverables)</h2>
-                <p className="text-xs text-[#6B5B85] mt-0.5">Статус виконання та дедлайни за грантовою угодою</p>
+                <h2 className="text-xl font-bold text-[#2D1B4E]">
+                  {isUa
+                    ? 'Робочі пакети (WP) та заплановані результати (Deliverables)'
+                    : 'Work Packages (WP) & Planned Deliverables'}
+                </h2>
+                <p className="text-xs text-[#6B5B85] mt-0.5">
+                  {isUa
+                    ? 'Статус виконання та дедлайни за грантовою угодою'
+                    : 'Execution status and deadlines under the Grant Agreement'}
+                </p>
               </div>
-              {role === 'admin' && <span className="text-xs font-bold text-[#9333EA]">Режим редагування активний</span>}
+              {role === 'admin' && (
+                <span className="text-xs font-bold text-[#9333EA]">
+                  {isUa ? 'Режим редагування активний' : 'Edit mode active'}
+                </span>
+              )}
             </div>
             <div className="divide-y divide-[#EFE5FA]">
-              {workPackages.map((wp, i) => (
+              {workPackagesData.map((wp, i) => (
                 <div key={wp.code} className="p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
@@ -841,7 +1004,9 @@ export default function CoDaSPortal() {
                       <span className="font-bold text-[#2D1B4E]">{wp.title}</span>
                     </div>
                     <div className="text-xs text-[#5B467A]">
-                      <strong>Результат:</strong> {wp.deliverable} • <strong>Термін:</strong> {wp.deadline} • <strong>Лідер:</strong> {wp.lead}
+                      <strong>{isUa ? 'Результат:' : 'Deliverable:'}</strong> {wp.deliverable} •{' '}
+                      <strong>{isUa ? 'Термін:' : 'Deadline:'}</strong> {wp.deadline} •{' '}
+                      <strong>{isUa ? 'Лідер:' : 'Lead:'}</strong> {wp.lead}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -851,8 +1016,12 @@ export default function CoDaSPortal() {
                     <span className="text-xs font-bold text-[#2D1B4E] w-10">{wp.progress}%</span>
                     {role === 'admin' && (
                       <div className="flex gap-1">
-                        <button onClick={() => handleUpdateWpProgress(i, -5)} className="w-7 h-7 rounded-lg bg-[#F3E8FF] text-[#6B21A8] text-xs font-bold">-</button>
-                        <button onClick={() => handleUpdateWpProgress(i, 5)} className="w-7 h-7 rounded-lg bg-[#8B5CF6] text-white text-xs font-bold">+</button>
+                        <button onClick={() => handleUpdateWpProgress(i, -5)} className="w-7 h-7 rounded-lg bg-[#F3E8FF] text-[#6B21A8] text-xs font-bold">
+                          -
+                        </button>
+                        <button onClick={() => handleUpdateWpProgress(i, 5)} className="w-7 h-7 rounded-lg bg-[#8B5CF6] text-white text-xs font-bold">
+                          +
+                        </button>
                       </div>
                     )}
                   </div>
@@ -862,13 +1031,13 @@ export default function CoDaSPortal() {
           </div>
         )}
 
-        {/* 4. PUBLICATIONS (DOI + INDEXATION FILTERS) */}
+        {/* 4. PUBLICATIONS */}
         {activeTab === 'publications' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row gap-3 justify-between">
               <input
                 type="text"
-                placeholder="Пошук за назвою, автором або DOI..."
+                placeholder={isUa ? 'Пошук за назвою, автором або DOI...' : 'Search by title, author, or DOI...'}
                 value={pubSearch}
                 onChange={(e) => setPubSearch(e.target.value)}
                 className="w-full sm:max-w-md px-4 py-2.5 rounded-2xl bg-white/90 border border-[#DFCCF5] text-sm text-[#2D1B4E]"
@@ -882,7 +1051,7 @@ export default function CoDaSPortal() {
                       pubIndexFilter === idx ? 'bg-[#8B5CF6] text-white' : 'text-[#6B5B85]'
                     }`}
                   >
-                    {idx === 'all' ? 'Усі бази' : idx}
+                    {idx === 'all' ? (isUa ? 'Усі бази' : 'All Databases') : idx}
                   </button>
                 ))}
               </div>
@@ -890,18 +1059,20 @@ export default function CoDaSPortal() {
 
             {(role === 'applicant' || role === 'admin') && (
               <form onSubmit={handleAddPublication} className="rounded-3xl bg-white/90 border border-[#D8B4FE] p-6 space-y-3 shadow-sm">
-                <div className="text-sm font-bold text-[#7E22CE]">+ Додати наукову публікацію до реєстру</div>
+                <div className="text-sm font-bold text-[#7E22CE]">
+                  {isUa ? '+ Додати наукову публікацію до реєстру' : '+ Add Scientific Publication to Registry'}
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <input
                     type="text"
-                    placeholder="Назва статті..."
+                    placeholder={isUa ? 'Назва статті...' : 'Article title...'}
                     value={newPubTitle}
                     onChange={(e) => setNewPubTitle(e.target.value)}
                     className="sm:col-span-2 px-4 py-2 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                   />
                   <input
                     type="text"
-                    placeholder="DOI (напр. 10.1109/6G.2026)"
+                    placeholder="DOI (e.g. 10.1109/6G.2026)"
                     value={newPubDoi}
                     onChange={(e) => setNewPubDoi(e.target.value)}
                     className="px-4 py-2 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
@@ -911,12 +1082,12 @@ export default function CoDaSPortal() {
                     onChange={(e) => setNewPubIndex(e.target.value as 'Scopus' | 'WoS')}
                     className="px-4 py-2 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                   >
-                    <option value="Scopus">Індексація: Scopus</option>
-                    <option value="WoS">Індексація: Web of Science</option>
+                    <option value="Scopus">Scopus</option>
+                    <option value="WoS">Web of Science</option>
                   </select>
                 </div>
                 <button type="submit" className="px-4 py-2 rounded-xl bg-[#8B5CF6] text-white text-xs font-bold">
-                  Опублікувати запис
+                  {isUa ? 'Опублікувати запис' : 'Publish Record'}
                 </button>
               </form>
             )}
@@ -943,33 +1114,34 @@ export default function CoDaSPortal() {
         {/* 5. EVENTS, NEWS & ALUMNI REVIEWS */}
         {activeTab === 'events_news' && (
           <div className="space-y-8">
-            {/* Events Section */}
             <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-5 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">Академічний календар</span>
-                  <h2 className="text-xl font-bold text-[#2D1B4E]">Конференції, семінари та воркшопи</h2>
-                </div>
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">
+                  {isUa ? 'Академічний календар' : 'Academic Calendar'}
+                </span>
+                <h2 className="text-xl font-bold text-[#2D1B4E]">
+                  {isUa ? 'Конференції, семінари та воркшопи' : 'Conferences, Seminars & Workshops'}
+                </h2>
               </div>
 
               {(role === 'applicant' || role === 'admin') && (
                 <form onSubmit={handleAddEvent} className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
                   <input
                     type="text"
-                    placeholder="Назва заходу..."
+                    placeholder={isUa ? 'Назва заходу...' : 'Event title...'}
                     value={newEventTitle}
                     onChange={(e) => setNewEventTitle(e.target.value)}
                     className="sm:col-span-2 px-3 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                   />
                   <input
                     type="text"
-                    placeholder="Дата (напр. 15.12.2026)"
+                    placeholder={isUa ? 'Дата (15.12.2026)' : 'Date (15.12.2026)'}
                     value={newEventDate}
                     onChange={(e) => setNewEventDate(e.target.value)}
                     className="px-3 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                   />
                   <button type="submit" className="px-4 py-2 rounded-xl bg-[#8B5CF6] text-white text-xs font-bold">
-                    + Додати захід
+                    {isUa ? '+ Додати захід' : '+ Add Event'}
                   </button>
                 </form>
               )}
@@ -977,32 +1149,32 @@ export default function CoDaSPortal() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {events.map((ev, i) => (
                   <div key={i} className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8] space-y-2">
-                    <span className="text-[11px] font-bold text-[#9333EA]">{ev.type}</span>
+                    <span className="text-[11px] font-bold text-[#9333EA]">{isUa ? ev.typeUa : ev.typeEn}</span>
                     <h3 className="font-bold text-sm text-[#2D1B4E]">{ev.title}</h3>
                     <div className="text-xs text-[#6B5B85]">📅 {ev.date} • 📍 {ev.location}</div>
-                    <div className="text-xs font-semibold text-[#4C3575]">Учасників: {ev.participants} осіб</div>
+                    <div className="text-xs font-semibold text-[#4C3575]">
+                      {isUa ? `Учасників: ${ev.participants} осіб` : `Participants: ${ev.participants}`}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Bilingual News & Alumni Reviews */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Bilingual News */}
               <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 space-y-4 shadow-sm">
                 <h3 className="text-lg font-bold text-[#2D1B4E]">
-                  {lang === 'ua' ? 'Останні новини проєкту (UA / EN)' : 'Latest Project News (EN / UA)'}
+                  {isUa ? 'Останні новини проєкту' : 'Latest Project News'}
                 </h3>
                 <div className="space-y-3">
                   <div className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
                     <div className="text-[11px] text-[#9333EA] font-bold">10.11.2026</div>
                     <div className="font-bold text-sm text-[#2D1B4E] mt-0.5">
-                      {lang === 'ua'
+                      {isUa
                         ? 'Відкрито набір на стипендії Erasmus Mundus CoDaS 2027'
                         : 'Applications Open for Erasmus Mundus CoDaS 2027 Scholarships'}
                     </div>
                     <p className="text-xs text-[#6B5B85] mt-1">
-                      {lang === 'ua'
+                      {isUa
                         ? 'Консорціум оголосив прийом заявок на подвійні магістерські програми у Фінляндії, Франції та Німеччині.'
                         : 'The consortium announced applications for double-degree master tracks in Finland, France, and Germany.'}
                     </p>
@@ -1010,12 +1182,12 @@ export default function CoDaSPortal() {
                   <div className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
                     <div className="text-[11px] text-[#9333EA] font-bold">24.10.2026</div>
                     <div className="font-bold text-sm text-[#2D1B4E] mt-0.5">
-                      {lang === 'ua'
+                      {isUa
                         ? 'Успішно завершено проміжний аудит Європейської Комісії'
                         : 'European Commission Mid-Term Audit Successfully Passed'}
                     </div>
                     <p className="text-xs text-[#6B5B85] mt-1">
-                      {lang === 'ua'
+                      {isUa
                         ? 'Усі робочі пакети першого етапу отримали найвищу оцінку експертів EACEA.'
                         : 'All first-phase work packages received the highest evaluation from EACEA experts.'}
                     </p>
@@ -1023,28 +1195,33 @@ export default function CoDaSPortal() {
                 </div>
               </div>
 
-              {/* Alumni Testimonials */}
               <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 space-y-4 shadow-sm">
                 <h3 className="text-lg font-bold text-[#2D1B4E]">
-                  {lang === 'ua' ? 'Відгуки учасників програми мобільності' : 'Alumni & Student Testimonials'}
+                  {isUa ? 'Відгуки учасників програми мобільності' : 'Alumni & Student Testimonials'}
                 </h3>
                 <div className="space-y-3">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-[#F5EEFD] to-[#FAE8FF] border border-[#E2D0F8]">
                     <p className="text-xs italic text-[#4C3575]">
-                      «Перший рік в Aalto University дав потужну базу з 5G/6G, а другий у Grenoble INP — реальний
-                      досвід у лабораторіях Edge AI. Захистила диплом із двома європейськими ступенями!»
+                      {isUa
+                        ? '«Перший рік в Aalto University дав потужну базу з 5G/6G, а другий у Grenoble INP — реальний досвід у лабораторіях Edge AI. Захистила диплом із двома європейськими ступенями!»'
+                        : '“The first year at Aalto University provided a strong foundation in 5G/6G, while the second at Grenoble INP gave hands-on experience in Edge AI labs. Graduated with two European MSc degrees!”'}
                     </p>
                     <div className="mt-2 text-xs font-bold text-[#2D1B4E]">
-                      Анастасія Демчук • Випускниця Cohort 1 (Aalto → Grenoble INP)
+                      {isUa
+                        ? 'Анастасія Демчук • Випускниця Cohort 1 (Aalto → Grenoble INP)'
+                        : 'Anastasiia Demchuk • Cohort 1 Alumna (Aalto → Grenoble INP)'}
                     </div>
                   </div>
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-[#F5EEFD] to-[#FAE8FF] border border-[#E2D0F8]">
                     <p className="text-xs italic text-[#4C3575]">
-                      «Завдяки індустріальному стажуванню в межах проєкту CoDaS я опублікував статтю на конференції
-                      IEEE та отримав офер R&amp;D-інженера ще до випуску.»
+                      {isUa
+                        ? '«Завдяки індустріальному стажуванню в межах проєкту CoDaS я опублікував статтю на конференції IEEE та отримав офер R&D-інженера ще до випуску.»'
+                        : '“Thanks to the industrial internship within CoDaS, I published a paper at an IEEE conference and received an R&D Engineer job offer prior to graduation.”'}
                     </p>
                     <div className="mt-2 text-xs font-bold text-[#2D1B4E]">
-                      Олександр Ткаченко • Випускник Cohort 1 (TU Braunschweig → UPC)
+                      {isUa
+                        ? 'Олександр Ткаченко • Випускник Cohort 1 (TU Braunschweig → UPC)'
+                        : 'Oleksandr Tkachenko • Cohort 1 Alumnus (TU Braunschweig → UPC)'}
                     </div>
                   </div>
                 </div>
@@ -1056,14 +1233,16 @@ export default function CoDaSPortal() {
         {/* 6. APPLICATIONS + DEVELOPMENT IDEAS */}
         {activeTab === 'applications' && (
           <div className="space-y-10">
-            {/* PART A: Candidate Applications */}
             {role === 'public' && (
               <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-8 text-center max-w-2xl mx-auto space-y-4 shadow-sm">
                 <div className="text-2xl">🔒</div>
-                <h2 className="text-xl font-black text-[#2D1B4E]">Подача кандидатури на програму CoDaS</h2>
+                <h2 className="text-xl font-black text-[#2D1B4E]">
+                  {isUa ? 'Подача кандидатури на програму CoDaS' : 'Submit Candidacy to CoDaS Programme'}
+                </h2>
                 <p className="text-xs sm:text-sm text-[#5B467A]">
-                  Авторизуйтесь або зареєструйтесь як учасник, щоб подати анкету кандидата на стипендію або перейти до
-                  кабінету керівника.
+                  {isUa
+                    ? 'Авторизуйтесь або зареєструйтесь як учасник, щоб подати анкету кандидата на стипендію або перейти до кабінету керівника.'
+                    : 'Please sign in or register as a participant to submit a scholarship application or access the admin panel.'}
                 </p>
                 <div className="flex justify-center gap-3">
                   <button
@@ -1073,7 +1252,7 @@ export default function CoDaSPortal() {
                     }}
                     className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white text-xs font-bold"
                   >
-                    Реєстрація учасника
+                    {isUa ? 'Реєстрація учасника' : 'Register as Participant'}
                   </button>
                   <button
                     onClick={() => {
@@ -1082,7 +1261,7 @@ export default function CoDaSPortal() {
                     }}
                     className="px-5 py-2.5 rounded-xl bg-[#F5EEFD] border border-[#DFCCF5] text-[#4C3575] text-xs font-semibold"
                   >
-                    Увійти в кабінет
+                    {isUa ? 'Увійти в кабінет' : 'Sign In'}
                   </button>
                 </div>
               </div>
@@ -1094,23 +1273,31 @@ export default function CoDaSPortal() {
                   onSubmit={handleApplicationSubmit}
                   className="lg:col-span-3 rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-4 shadow-sm"
                 >
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#C026D3]">Кабінет кандидата</span>
-                  <h2 className="text-xl font-bold text-[#2D1B4E]">Подача кандидатури на програму CoDaS</h2>
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#C026D3]">
+                    {isUa ? 'Кабінет кандидата' : 'Applicant Dashboard'}
+                  </span>
+                  <h2 className="text-xl font-bold text-[#2D1B4E]">
+                    {isUa ? 'Подача кандидатури на програму CoDaS' : 'Submit Application to CoDaS'}
+                  </h2>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">ПІБ Кандидата *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'ПІБ Кандидата *' : 'Candidate Full Name *'}
+                      </label>
                       <input
                         type="text"
                         required
-                        placeholder="Введіть ваше прізвище та ім'я"
+                        placeholder={isUa ? "Введіть ваше прізвище та ім'я" : 'Enter your full name'}
                         value={appFullName}
                         onChange={(e) => setAppFullName(e.target.value)}
                         className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Контактний Email *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'Контактний Email *' : 'Contact Email *'}
+                      </label>
                       <input
                         type="email"
                         required
@@ -1124,18 +1311,22 @@ export default function CoDaSPortal() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Університет та спеціальність *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'Університет та спеціальність *' : 'Home University & Major *'}
+                      </label>
                       <input
                         type="text"
                         required
-                        placeholder="Напр.: ЗУНУ, Інженерія програмного забезпечення"
+                        placeholder={isUa ? 'Напр.: ЗУНУ, Інженерія ПЗ' : 'e.g. WUNU, Software Engineering'}
                         value={appUniversity}
                         onChange={(e) => setAppUniversity(e.target.value)}
                         className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Середній бал (GPA) *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'Середній бал (GPA) *' : 'GPA Score *'}
+                      </label>
                       <input
                         type="text"
                         required
@@ -1149,7 +1340,9 @@ export default function CoDaSPortal() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Трек мобільності *</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'Трек мобільності *' : 'Mobility Track *'}
+                      </label>
                       <select
                         value={appTrack}
                         onChange={(e) => setAppTrack(e.target.value)}
@@ -1160,7 +1353,9 @@ export default function CoDaSPortal() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">Посилання на GitHub / CV</label>
+                      <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                        {isUa ? 'Посилання на GitHub / CV' : 'GitHub / CV Link'}
+                      </label>
                       <input
                         type="url"
                         placeholder="https://github.com/..."
@@ -1172,11 +1367,13 @@ export default function CoDaSPortal() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#4C3575] mb-1">Мотиваційний лист *</label>
+                    <label className="block text-xs font-semibold text-[#4C3575] mb-1">
+                      {isUa ? 'Мотиваційний лист *' : 'Motivation Statement *'}
+                    </label>
                     <textarea
                       rows={3}
                       required
-                      placeholder="Опишіть ваш досвід та наукові інтереси..."
+                      placeholder={isUa ? 'Опишіть ваш досвід та наукові інтереси...' : 'Describe your experience and research interests...'}
                       value={appMotivation}
                       onChange={(e) => setAppMotivation(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7FE] border border-[#DFCCF5] text-sm text-[#2D1B4E]"
@@ -1187,12 +1384,14 @@ export default function CoDaSPortal() {
                     type="submit"
                     className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-white text-sm font-extrabold shadow-md shadow-purple-300"
                   >
-                    Надіслати кандидатуру
+                    {isUa ? 'Надіслати кандидатуру' : 'Submit Candidacy'}
                   </button>
                 </form>
 
                 <div className="lg:col-span-2 rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 space-y-3 shadow-sm">
-                  <h3 className="text-lg font-bold text-[#2D1B4E]">Подані заявки</h3>
+                  <h3 className="text-lg font-bold text-[#2D1B4E]">
+                    {isUa ? 'Подані заявки' : 'Submitted Applications'}
+                  </h3>
                   <div className="space-y-3">
                     {applications.map((item) => (
                       <div key={item.id} className="p-4 rounded-2xl bg-[#FAF7FE] border border-[#DFCCF5] space-y-1.5">
@@ -1207,7 +1406,17 @@ export default function CoDaSPortal() {
                                   : 'bg-amber-100 text-amber-800'
                             }`}
                           >
-                            {item.status === 'approved' ? '✓ Схвалено' : item.status === 'rejected' ? '✕ Відхилено' : '⏳ На розгляді'}
+                            {item.status === 'approved'
+                              ? isUa
+                                ? '✓ Схвалено'
+                                : '✓ Approved'
+                              : item.status === 'rejected'
+                                ? isUa
+                                  ? '✕ Відхилено'
+                                  : '✕ Rejected'
+                                : isUa
+                                  ? '⏳ На розгляді'
+                                  : '⏳ Pending'}
                           </span>
                         </div>
                         <div className="text-[11px] text-[#6B5B85]">{item.university} • GPA: {item.gpa}</div>
@@ -1223,19 +1432,27 @@ export default function CoDaSPortal() {
               <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-5 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">Панель керівника / Admin</span>
-                    <h2 className="text-xl font-bold text-[#2D1B4E]">Фільтрація та модерація заявок кандидатів</h2>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">
+                      {isUa ? 'Панель керівника / Admin' : 'Selection Committee Panel (Admin)'}
+                    </span>
+                    <h2 className="text-xl font-bold text-[#2D1B4E]">
+                      {isUa ? 'Фільтрація та модерація заявок кандидатів' : 'Candidate Application Filtering & Moderation'}
+                    </h2>
                   </div>
                   <div className="flex gap-2 text-xs font-semibold">
-                    <span className="px-3 py-1 rounded-xl bg-[#F5EEFD] text-[#4C3575]">Усього: {applications.length}</span>
-                    <span className="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800">Схвалено: {approvedCount}</span>
+                    <span className="px-3 py-1 rounded-xl bg-[#F5EEFD] text-[#4C3575]">
+                      {isUa ? `Усього: ${applications.length}` : `Total: ${applications.length}`}
+                    </span>
+                    <span className="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800">
+                      {isUa ? `Схвалено: ${approvedCount}` : `Approved: ${approvedCount}`}
+                    </span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#F7F2FC] border border-[#E5D5F7]">
                   <input
                     type="text"
-                    placeholder="Пошук за ПІБ або ВНЗ..."
+                    placeholder={isUa ? 'Пошук за ПІБ або ВНЗ...' : 'Search by name or university...'}
                     value={appSearch}
                     onChange={(e) => setAppSearch(e.target.value)}
                     className="px-3 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
@@ -1245,17 +1462,17 @@ export default function CoDaSPortal() {
                     onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
                     className="px-3 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                   >
-                    <option value="all">Усі статуси</option>
-                    <option value="pending">⏳ На розгляді</option>
-                    <option value="approved">✓ Схвалені</option>
-                    <option value="rejected">✕ Відхилені</option>
+                    <option value="all">{isUa ? 'Усі статуси' : 'All Statuses'}</option>
+                    <option value="pending">{isUa ? '⏳ На розгляді' : '⏳ Pending'}</option>
+                    <option value="approved">{isUa ? '✓ Схвалені' : '✓ Approved'}</option>
+                    <option value="rejected">{isUa ? '✕ Відхилені' : '✕ Rejected'}</option>
                   </select>
                   <select
                     value={filterTrack}
                     onChange={(e) => setFilterTrack(e.target.value)}
                     className="px-3 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                   >
-                    <option value="all">Усі треки мобільності</option>
+                    <option value="all">{isUa ? 'Усі треки мобільності' : 'All Mobility Tracks'}</option>
                     <option value="Aalto">Aalto University</option>
                     <option value="Braunschweig">TU Braunschweig</option>
                   </select>
@@ -1279,13 +1496,13 @@ export default function CoDaSPortal() {
                           onClick={() => handleApplicationStatus(app.id, 'approved')}
                           className="px-3.5 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold"
                         >
-                          ✓ Схвалити
+                          {isUa ? '✓ Схвалити' : '✓ Approve'}
                         </button>
                         <button
                           onClick={() => handleApplicationStatus(app.id, 'rejected')}
                           className="px-3.5 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold"
                         >
-                          ✕ Відхилити
+                          {isUa ? '✕ Відхилити' : '✕ Reject'}
                         </button>
                       </div>
                     </div>
@@ -1294,14 +1511,17 @@ export default function CoDaSPortal() {
               </div>
             )}
 
-            {/* PART B: Development Ideas & Proposals */}
+            {/* Development Ideas */}
             <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-6 shadow-sm">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">Беклог ідей (Product Backlog)</span>
-                <h2 className="text-xl font-bold text-[#2D1B4E]">Ідеї та пропозиції для розвитку проєкту CoDaS</h2>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#9333EA]">Product Backlog</span>
+                <h2 className="text-xl font-bold text-[#2D1B4E]">
+                  {isUa ? 'Ідеї та пропозиції для розвитку проєкту CoDaS' : 'Development Ideas & Community Proposals'}
+                </h2>
                 <p className="text-xs text-[#6B5B85] mt-1">
-                  Кожен відвідувач або учасник може запропонувати ідею нового воркшопу чи дослідження, а керівник —
-                  схвалити її до плану наступного спринту.
+                  {isUa
+                    ? 'Кожен відвідувач або учасник може запропонувати ідею нового воркшопу чи дослідження, а керівник — схвалити її до плану наступного спринту.'
+                    : 'Any visitor or participant can propose a new workshop or research topic, and the project lead can approve it into the next sprint backlog.'}
                 </p>
               </div>
 
@@ -1309,7 +1529,7 @@ export default function CoDaSPortal() {
                 <input
                   type="text"
                   required
-                  placeholder="Ваше ім'я"
+                  placeholder={isUa ? "Ваше ім'я" : 'Your name'}
                   value={ideaAuthor}
                   onChange={(e) => setIdeaAuthor(e.target.value)}
                   className="px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
@@ -1319,14 +1539,14 @@ export default function CoDaSPortal() {
                   onChange={(e) => setIdeaCategory(e.target.value)}
                   className="px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                 >
-                  <option value="R&D / Воркшоп">R&amp;D / Воркшоп</option>
-                  <option value="Навчальний модуль">Навчальний модуль</option>
-                  <option value="Партнерство з бізнесом">Партнерство з бізнесом</option>
+                  <option value="R&D / Workshop">R&amp;D / Workshop</option>
+                  <option value="Curriculum Module">Curriculum Module</option>
+                  <option value="Industry Partnership">Industry Partnership</option>
                 </select>
                 <input
                   type="text"
                   required
-                  placeholder="Назва ідеї..."
+                  placeholder={isUa ? 'Назва ідеї...' : 'Idea title...'}
                   value={ideaTitle}
                   onChange={(e) => setIdeaTitle(e.target.value)}
                   className="sm:col-span-2 px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
@@ -1334,13 +1554,13 @@ export default function CoDaSPortal() {
                 <input
                   type="text"
                   required
-                  placeholder="Короткий опис цінності для проєкту..."
+                  placeholder={isUa ? 'Короткий опис цінності для проєкту...' : 'Short description of project value...'}
                   value={ideaDesc}
                   onChange={(e) => setIdeaDesc(e.target.value)}
                   className="sm:col-span-3 px-3.5 py-2 rounded-xl bg-white border border-[#DFCCF5] text-xs"
                 />
                 <button type="submit" className="px-4 py-2 rounded-xl bg-[#8B5CF6] text-white text-xs font-bold">
-                  + Запропонувати ідею
+                  {isUa ? '+ Запропонувати ідею' : '+ Submit Idea'}
                 </button>
               </form>
 
@@ -1355,20 +1575,26 @@ export default function CoDaSPortal() {
                             idea.status === 'accepted' ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800'
                           }`}
                         >
-                          {idea.status === 'accepted' ? '✓ Взято в план розвитку' : 'Нова пропозиція'}
+                          {idea.status === 'accepted'
+                            ? isUa
+                              ? '✓ Взято в план розвитку'
+                              : '✓ Accepted to Backlog'
+                            : isUa
+                              ? 'Нова пропозиція'
+                              : 'New Proposal'}
                         </span>
                       </div>
                       <h3 className="font-bold text-sm text-[#2D1B4E] mt-1">{idea.title}</h3>
                       <p className="text-xs text-[#6B5B85] mt-1">{idea.description}</p>
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-[#EFE5FA] text-[11px] text-[#6B5B85]">
-                      <span>Автор: {idea.author}</span>
+                      <span>{isUa ? `Автор: ${idea.author}` : `Author: ${idea.author}`}</span>
                       {role === 'admin' && idea.status !== 'accepted' && (
                         <button
                           onClick={() => handleAcceptIdea(idea.id)}
                           className="px-3 py-1 rounded-lg bg-[#8B5CF6] text-white font-bold"
                         >
-                          Схвалити в беклог
+                          {isUa ? 'Схвалити в беклог' : 'Approve to Backlog'}
                         </button>
                       )}
                     </div>
@@ -1382,16 +1608,21 @@ export default function CoDaSPortal() {
         {/* 7. REPORTS & KPI */}
         {activeTab === 'reports' && (
           <div className="space-y-6">
-            {/* KPI Metrics */}
             <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-[#2D1B4E]">Показники ефективності проєкту (KPI)</h2>
-                  <p className="text-xs text-[#6B5B85]">Порівняння планових і фактичних значень грантової угоди</p>
+                  <h2 className="text-xl font-bold text-[#2D1B4E]">
+                    {isUa ? 'Показники ефективності проєкту (KPI)' : 'Project Key Performance Indicators (KPI)'}
+                  </h2>
+                  <p className="text-xs text-[#6B5B85]">
+                    {isUa
+                      ? 'Порівняння планових і фактичних значень грантової угоди'
+                      : 'Planned vs. actual Grant Agreement indicators'}
+                  </p>
                 </div>
                 {role === 'admin' && (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#7E22CE]">Загальний KPI:</span>
+                    <span className="text-xs font-bold text-[#7E22CE]">KPI:</span>
                     <input
                       type="number"
                       min={0}
@@ -1407,44 +1638,77 @@ export default function CoDaSPortal() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="text-xs text-[#6B5B85]">Зараховані студенти (План: 120)</div>
+                  <div className="text-xs text-[#6B5B85]">
+                    {isUa ? 'Зараховані студенти (План: 120)' : 'Enrolled Students (Target: 120)'}
+                  </div>
                   <div className="text-3xl font-black text-[#2D1B4E] mt-1">{116 + approvedCount} / 120</div>
-                  <div className="text-xs text-emerald-700 font-semibold mt-1">98.3% виконання плану</div>
+                  <div className="text-xs text-emerald-700 font-semibold mt-1">
+                    {isUa ? '98.3% виконання плану' : '98.3% target achieved'}
+                  </div>
                 </div>
                 <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="text-xs text-[#6B5B85]">Статті Scopus / WoS (План: 20)</div>
+                  <div className="text-xs text-[#6B5B85]">
+                    {isUa ? 'Статті Scopus / WoS (План: 20)' : 'Scopus / WoS Papers (Target: 20)'}
+                  </div>
                   <div className="text-3xl font-black text-[#2D1B4E] mt-1">{publications.length + 21}</div>
-                  <div className="text-xs text-[#7E22CE] font-semibold mt-1">Перевиконання на +20%</div>
+                  <div className="text-xs text-[#7E22CE] font-semibold mt-1">
+                    {isUa ? 'Перевиконання на +20%' : '+20% above target'}
+                  </div>
                 </div>
                 <div className="p-5 rounded-2xl bg-[#FAF7FE] border border-[#E6D6F8]">
-                  <div className="text-xs text-[#6B5B85]">Проведені заходи (План: 12)</div>
+                  <div className="text-xs text-[#6B5B85]">
+                    {isUa ? 'Проведені заходи (План: 12)' : 'Completed Events (Target: 12)'}
+                  </div>
                   <div className="text-3xl font-black text-[#2D1B4E] mt-1">{events.length + 8} / 12</div>
-                  <div className="text-xs text-[#7E22CE] font-semibold mt-1">За графіком консорціуму</div>
+                  <div className="text-xs text-[#7E22CE] font-semibold mt-1">
+                    {isUa ? 'За графіком консорціуму' : 'On consortium schedule'}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Official Reports Table (PDF Export / Print) */}
             <div className="rounded-3xl bg-white/90 border border-[#E2D0F8] p-6 sm:p-8 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-[#2D1B4E]">Звіти за періодами реалізації (PDF)</h2>
+                <h2 className="text-xl font-bold text-[#2D1B4E]">
+                  {isUa ? 'Звіти за періодами реалізації (PDF)' : 'Periodic & Final Reports (PDF)'}
+                </h2>
                 <button
                   onClick={() => window.print()}
                   className="px-4 py-2 rounded-xl bg-[#8B5CF6] text-white text-xs font-bold hover:opacity-95"
                 >
-                  🖨 Сформувати / Друк звіту (PDF)
+                  {isUa ? '🖨 Сформувати / Друк звіту (PDF)' : '🖨 Generate / Print Report (PDF)'}
                 </button>
               </div>
               <div className="divide-y divide-[#EFE5FA]">
                 {[
-                  { name: 'Періодичний звіт №1 (Технічний та фінансовий)', period: '01.09.2023 – 31.08.2024', status: 'Прийнято EACEA' },
-                  { name: 'Проміжний звіт №2 (Mid-Term Consortium Report)', period: '01.09.2024 – 31.08.2025', status: 'Прийнято EACEA' },
-                  { name: 'Поточний звіт за 2026 рік (WP1–WP5 & KPI)', period: '01.09.2025 – 12.11.2026', status: 'На перевірці керівника' },
+                  {
+                    name: isUa
+                      ? 'Періодичний звіт №1 (Технічний та фінансовий)'
+                      : 'Periodic Report #1 (Technical & Financial)',
+                    period: '01.09.2023 – 31.08.2024',
+                    status: isUa ? 'Прийнято EACEA' : 'Accepted by EACEA',
+                  },
+                  {
+                    name: isUa
+                      ? 'Проміжний звіт №2 (Mid-Term Consortium Report)'
+                      : 'Interim Report #2 (Mid-Term Consortium Report)',
+                    period: '01.09.2024 – 31.08.2025',
+                    status: isUa ? 'Прийнято EACEA' : 'Accepted by EACEA',
+                  },
+                  {
+                    name: isUa
+                      ? 'Поточний звіт за 2026 рік (WP1–WP5 & KPI)'
+                      : 'Current Annual Report 2026 (WP1–WP5 & KPI)',
+                    period: '01.09.2025 – 12.11.2026',
+                    status: isUa ? 'На перевірці керівника' : 'Under Lead Review',
+                  },
                 ].map((rep, i) => (
                   <div key={i} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <div className="font-bold text-sm text-[#2D1B4E]">{rep.name}</div>
-                      <div className="text-xs text-[#6B5B85]">Звітний період: {rep.period}</div>
+                      <div className="text-xs text-[#6B5B85]">
+                        {isUa ? `Звітний період: ${rep.period}` : `Reporting period: ${rep.period}`}
+                      </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#F3E8FF] text-[#7E22CE]">
@@ -1454,7 +1718,7 @@ export default function CoDaSPortal() {
                         onClick={() => window.print()}
                         className="text-xs font-bold text-[#9333EA] hover:underline"
                       >
-                        Завантажити PDF ↓
+                        {isUa ? 'Завантажити PDF ↓' : 'Download PDF ↓'}
                       </button>
                     </div>
                   </div>
@@ -1468,7 +1732,10 @@ export default function CoDaSPortal() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-[#E5D5F7] bg-white/80 mt-16 py-8 px-4 sm:px-6 text-xs text-[#6B5B85]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>© 2026 CoDaS Consortium (Communications Engineering &amp; Data Science). All rights reserved.</div>
+          <div>
+            © 2026 CoDaS Consortium (Communications Engineering &amp; Data Science).{' '}
+            {isUa ? 'Усі права захищено.' : 'All rights reserved.'}
+          </div>
           <div className="text-[#8E7AA8]">Co-funded by the Erasmus+ Programme of the European Union</div>
         </div>
       </footer>
