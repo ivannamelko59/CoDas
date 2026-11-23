@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CoDaS — Портал звітності та академічної мобільності консорціуму
 
-## Getting Started
+Вебзастосунок для публічного представлення та внутрішньої звітності міжнародного магістерського проєкту ЄС **Communications Engineering & Data Science (CoDaS, Erasmus+ EMJM, Grant Agreement № 101082451)**.
 
-First, run the development server:
+- **Робочий сайт (Vercel):** https://nextjs-boilerplate-ivannamelko59-3435.vercel.app
+- **Документація користувача:** [`docs/user-guide.md`](docs/user-guide.md)
+- **Архітектура проєкту:** [`docs/architecture.md`](docs/architecture.md)
+- **Критерії якості (DoR / DoD):** [`docs/definition-of-done.md`](docs/definition-of-done.md)
 
+## Основний функціонал (Реліз 1.0)
+- **Паспорт проєкту:** метадані гранту, бюджет, терміни реалізації, анотація та завдання.
+- **Команда та ВНЗ:** учасники консорціуму з ORCID та інформація про партнерські університети.
+- **Робочі пакети (`WP1–WP5`):** відстеження виконання завдань і дедлайнів.
+- **Публікації:** пошук, фільтрація за Scopus/WoS, роком і типом, автозаповнення за DOI через Crossref REST API.
+- **Заходи та Новини:** календар подій, двомовні новини (`UA | EN`) та відгуки учасників.
+- **Участь та Ідеї:** подача заявок на мобільність, модерація кандидатур і беклог ідей розвитку.
+- **Звіти та KPI:** аналітика виконання показників і формування зведених звітів у PDF.
+
+## Локальний запуск
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
